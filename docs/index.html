@@ -82,7 +82,8 @@
         <div class="hero-actions">
           <a class="btn-link btn-primary" href="#installation">Get Started →</a>
           <a class="btn-link" href="#wireless">Wi-Fi QR Pairing Guide</a>
-          <a class="btn-link" href="https://github.com/ADPer0705/adbsight/releases/tag/v1.0.0" target="_blank" rel="noopener">Download v1.0.0 Binary</a>
+          <a class="btn-link" href="https://crates.io/crates/adbsight" target="_blank" rel="noopener">crates.io</a>
+          <a class="btn-link" href="https://github.com/ADPer0705/adbsight/releases/tag/v1.0.0" target="_blank" rel="noopener">v1.0.0 Release</a>
         </div>
 
         <div class="tui-frame">
@@ -133,26 +134,37 @@
         <div class="section-tag">02 // Getting Started</div>
         <h2>Installation &amp; Quick Start</h2>
         <p>
-          You can download the prebuilt Linux <code>v1.0.0</code> release binary directly or compile from source on Linux, macOS, or Windows with Rust <code>1.88+</code>.
+          Install <code>adbsight</code> from <strong>crates.io</strong> with Cargo on Linux, macOS, or Windows (Rust <code>1.88+</code>), grab the prebuilt Linux <code>v1.0.0</code> tarball, or build straight from source.
         </p>
 
         <div class="code-wrap">
-          <div class="code-head"><span>bash — build &amp; run from source</span><button class="copy-btn">Copy</button></div>
-<pre>git clone https://github.com/ADPer0705/adbsight.git
-cd adbsight
+          <div class="code-head"><span>bash — install via cargo (recommended)</span><button class="copy-btn">Copy</button></div>
+<pre># Install from crates.io
+cargo install adbsight
 
 # Try the built-in simulated Android 15 device immediately (no phone needed)
-cargo run --release -- --demo
+adbsight --demo
 
 # Or launch against your real USB / Wi-Fi devices
-cargo run --release</pre>
+adbsight</pre>
         </div>
 
         <div class="code-wrap">
-          <div class="code-head"><span>bash — install v1.0.0 binary on Linux x86_64</span><button class="copy-btn">Copy</button></div>
-<pre>curl -LO https://github.com/ADPer0705/adbsight/releases/download/v1.0.0/adbsight-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
+          <div class="code-head"><span>bash — install from GitHub or prebuilt Linux x86_64 binary</span><button class="copy-btn">Copy</button></div>
+<pre># Install latest main directly from GitHub
+cargo install --git https://github.com/ADPer0705/adbsight
+
+# Or download the prebuilt Linux x86_64 v1.0.0 release binary
+curl -LO https://github.com/ADPer0705/adbsight/releases/download/v1.0.0/adbsight-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
 tar -xzf adbsight-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
 ./adbsight --version</pre>
+        </div>
+
+        <div class="code-wrap">
+          <div class="code-head"><span>bash — build &amp; run from local clone</span><button class="copy-btn">Copy</button></div>
+<pre>git clone https://github.com/ADPer0705/adbsight.git
+cd adbsight
+cargo run --release -- --demo</pre>
         </div>
 
         <h3>ADB Binary Auto-Discovery</h3>

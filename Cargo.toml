@@ -2,7 +2,15 @@
 name = "adbsight"
 version = "1.0.0"
 edition = "2024"
+rust-version = "1.88"
 description = "Cross-platform Rust TUI deep inspector for Android devices over USB and Wi-Fi ADB"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/ADPer0705/adbsight"
+documentation = "https://adbsight.dearanayji.rocks"
+keywords = ["adb", "android", "tui", "ratatui", "wireless"]
+categories = ["command-line-utilities", "development-tools::debugging"]
+exclude = ["docs/*", "exports/*"]
 
 [dependencies]
 anyhow = "1"

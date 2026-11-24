@@ -41,24 +41,44 @@ A fast, cross-platform **Rust + Ratatui TUI Android Deep Inspector** with first-
 
 ---
 
+## Installation
+
+### Install via Cargo (Recommended)
+
+```bash
+# Install the latest release from crates.io
+cargo install adbsight
+
+# Or install directly from GitHub
+cargo install --git https://github.com/ADPer0705/adbsight
+```
+
+### Prebuilt Linux x86_64 Binary
+
+Download `adbsight-v1.0.0-x86_64-unknown-linux-gnu.tar.gz` from [GitHub Releases](https://github.com/ADPer0705/adbsight/releases/tag/v1.0.0).
+
+---
+
 ## Quick Start
 
 ```bash
-# Build & launch with the built-in simulated Android 15 device
-cargo run -- --demo
+# Launch with the built-in simulated Android 15 device (no phone needed)
+adbsight --demo
 
 # Launch against real USB / Wi-Fi devices
-cargo run
+adbsight
 
 # Connect directly to a wireless ADB endpoint on startup
-cargo run -- --connect 192.168.1.42:5555
+adbsight --connect 192.168.1.42:5555
 
 # List USB, Wi-Fi, and mDNS devices headlessly
-cargo run -- devices
+adbsight devices
 
 # Capture a full Markdown or JSON inspection dossier headlessly
-cargo run -- --demo dump --format md --out report.md --save-db
+adbsight --demo dump --format md --out report.md --save-db
 ```
+
+> Full wiki & documentation: [adbsight.dearanayji.rocks](https://adbsight.dearanayji.rocks) • Licensed under [MIT](LICENSE).
 
 ---
 
