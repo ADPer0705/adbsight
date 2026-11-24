@@ -92,7 +92,7 @@ pub fn parse_wm_value(output: &str) -> String {
     output
         .lines()
         .filter_map(|l| l.split_once(':').map(|(_, v)| v.trim()))
-        .last()
+        .next_back()
         .unwrap_or_else(|| output.trim())
         .to_string()
 }

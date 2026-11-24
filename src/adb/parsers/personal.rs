@@ -112,7 +112,7 @@ pub fn parse_sms(output: &str) -> PersonalDataResult<SmsRecord> {
         });
     }
 
-    records.sort_by(|a, b| b.timestamp_ms.cmp(&a.timestamp_ms));
+    records.sort_by_key(|a| std::cmp::Reverse(a.timestamp_ms));
     PersonalDataResult {
         records,
         permission_hint: None,
@@ -164,7 +164,7 @@ pub fn parse_call_logs(output: &str) -> PersonalDataResult<CallLogRecord> {
         });
     }
 
-    records.sort_by(|a, b| b.timestamp_ms.cmp(&a.timestamp_ms));
+    records.sort_by_key(|a| std::cmp::Reverse(a.timestamp_ms));
     PersonalDataResult {
         records,
         permission_hint: None,
