@@ -29,7 +29,11 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
     let tabs = Tabs::new(titles)
         .select(sub_idx)
         .block(theme::panel_block("System & Hardware [Tab to switch]"))
-        .highlight_style(Style::default().fg(theme::ACCENT).add_modifier(Modifier::BOLD));
+        .highlight_style(
+            Style::default()
+                .fg(theme::ACCENT)
+                .add_modifier(Modifier::BOLD),
+        );
     frame.render_widget(tabs, chunks[0]);
 
     // Filter bar
@@ -43,7 +47,8 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
     } else {
         theme::panel_block(filter_title)
     };
-    let filter_text = Paragraph::new(format!("> {}", state.system.filter.value)).block(filter_block);
+    let filter_text =
+        Paragraph::new(format!("> {}", state.system.filter.value)).block(filter_block);
     frame.render_widget(filter_text, chunks[1]);
 
     if state.system.loading {

@@ -119,14 +119,16 @@ mod tests {
 
     #[test]
     fn parses_getprop_settings_and_sensors() {
-        let props = parse_getprop(
-            "[ro.product.model]: [Pixel 9 Pro]\n[ro.build.version.release]: [15]\n",
-        );
+        let props =
+            parse_getprop("[ro.product.model]: [Pixel 9 Pro]\n[ro.build.version.release]: [15]\n");
         assert_eq!(props.len(), 2);
         assert_eq!(props[1].key, "ro.product.model");
         assert_eq!(props[1].value, "Pixel 9 Pro");
 
-        let settings = parse_settings("screen_brightness=120\nvolume_ring=5\n", SettingNamespace::System);
+        let settings = parse_settings(
+            "screen_brightness=120\nvolume_ring=5\n",
+            SettingNamespace::System,
+        );
         assert_eq!(settings.len(), 2);
 
         let sensor_dump = "\

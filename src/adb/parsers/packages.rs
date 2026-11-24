@@ -176,7 +176,10 @@ package:/system/app/Settings/Settings.apk=com.android.settings versionCode:35 ui
         let detail = parse_package_detail("com.termux", dump);
         assert_eq!(detail.version_name, "0.118.0");
         assert_eq!(detail.target_sdk, "28");
-        assert_eq!(detail.granted_permissions, vec!["android.permission.INTERNET"]);
+        assert_eq!(
+            detail.granted_permissions,
+            vec!["android.permission.INTERNET"]
+        );
         assert_eq!(
             detail.denied_permissions,
             vec!["android.permission.POST_NOTIFICATIONS"]

@@ -180,54 +180,56 @@ impl WorkerPool {
                                 .find(|s| s.kind == MdnsKind::Pairing && s.name == service_name)
                         {
                             let pair_ep = format!("{}:{}", pair_svc.address, pair_svc.port);
-                                let _ = t.send(AppEvent::QrPairingStatus(format!(
-                                    "Discovered {pair_ep}, pairing..."
-                                )));
-                                match c.pair(&pair_ep, &password).await {
-                                    Ok(msg) => {
-                                        let _ = t.send(AppEvent::QrPairingStatus(format!(
-                                            "Paired ({msg}) — searching connect port..."
-                                        )));
-                                        // Look for _adb-tls-connect on the same IP
-                                        for _ in 0..15 {
-                                            if let Ok(svcs2) = c.list_mdns_services().await
-                                                && let Some(conn) = svcs2.iter().find(|s| {
-                                                    s.kind == MdnsKind::Connect
-                                                        && s.address == pair_svc.address
-                                                })
-                                            {
-                                                let conn_ep = format!("{}:{}", conn.address, conn.port);
-                                                match c.connect(&conn_ep).await {
-                                                    Ok(cmsg) => {
-                                                        let _ = t.send(AppEvent::WirelessActionDone {
+                            let _ = t.send(AppEvent::QrPairingStatus(format!(
+                                "Discovered {pair_ep}, pairing..."
+                            )));
+                            match c.pair(&pair_ep, &password).await {
+                                Ok(msg) => {
+                                    let _ = t.send(AppEvent::QrPairingStatus(format!(
+                                        "Paired ({msg}) — searching connect port..."
+                                    )));
+                                    // Look for _adb-tls-connect on the same IP
+                                    for _ in 0..15 {
+                                        if let Ok(svcs2) = c.list_mdns_services().await
+                                            && let Some(conn) = svcs2.iter().find(|s| {
+                                                s.kind == MdnsKind::Connect
+                                                    && s.address == pair_svc.address
+                                            })
+                                        {
+                                            let conn_ep = format!("{}:{}", conn.address, conn.port);
+                                            match c.connect(&conn_ep).await {
+                                                Ok(cmsg) => {
+                                                    let _ = t.send(AppEvent::WirelessActionDone {
                                                             message: format!("QR paired & connected: {conn_ep} ({cmsg})"),
                                                             connected_endpoint: Some(conn_ep),
                                                             refresh_devices: true,
                                                         });
-                                                        return;
-                                                    }
-                                                    Err(e) => {
-                                                        let _ = t.send(AppEvent::WirelessActionFailed(e.to_string()));
-                                                        return;
-                                                    }
+                                                    return;
+                                                }
+                                                Err(e) => {
+                                                    let _ = t.send(AppEvent::WirelessActionFailed(
+                                                        e.to_string(),
+                                                    ));
+                                                    return;
                                                 }
                                             }
-                                            tokio::time::sleep(Duration::from_secs(1)).await;
                                         }
-                                        let _ = t.send(AppEvent::WirelessActionDone {
+                                        tokio::time::sleep(Duration::from_secs(1)).await;
+                                    }
+                                    let _ = t.send(AppEvent::WirelessActionDone {
                                             message: format!("Paired to {pair_ep}; connect manually or pick from mDNS list."),
                                             connected_endpoint: None,
                                             refresh_devices: true,
                                         });
-                                        return;
-                                    }
-                                    Err(e) => {
-                                        let _ = t.send(AppEvent::WirelessActionFailed(format!(
-                                            "QR pairing failed: {e}"
-                                        )));
-                                        return;
-                                    }
+                                    return;
                                 }
+                                Err(e) => {
+                                    let _ = t.send(AppEvent::WirelessActionFailed(format!(
+                                        "QR pairing failed: {e}"
+                                    )));
+                                    return;
+                                }
+                            }
                         }
                         tokio::time::sleep(Duration::from_secs(1)).await;
                     }
@@ -242,11 +244,17 @@ impl WorkerPool {
                 let _ = tx.send(AppEvent::RootChecked { serial, status });
             }
             WorkerCommand::FetchIdentity { serial } => {
-                let result = client.fetch_identity(&serial).await.map_err(|e| e.to_string());
+                let result = client
+                    .fetch_identity(&serial)
+                    .await
+                    .map_err(|e| e.to_string());
                 let _ = tx.send(AppEvent::IdentityLoaded { serial, result });
             }
             WorkerCommand::FetchTelemetry { serial } => {
-                let result = client.fetch_telemetry(&serial).await.map_err(|e| e.to_string());
+                let result = client
+                    .fetch_telemetry(&serial)
+                    .await
+                    .map_err(|e| e.to_string());
                 let _ = tx.send(AppEvent::TelemetryLoaded { serial, result });
             }
             WorkerCommand::FetchSystemAll { serial } => {
@@ -287,7 +295,10 @@ impl WorkerPool {
                 });
             }
             WorkerCommand::FetchPackages { serial } => {
-                let result = client.fetch_packages(&serial).await.map_err(|e| e.to_string());
+                let result = client
+                    .fetch_packages(&serial)
+                    .await
+                    .map_err(|e| e.to_string());
                 let _ = tx.send(AppEvent::PackagesLoaded { serial, result });
             }
             WorkerCommand::FetchPackageDetail { serial, package } => {
@@ -431,7 +442,10 @@ impl WorkerPool {
                 );
             }
             WorkerCommand::Screencap { serial, local } => {
-                let res = client.screencap(&serial, &local).await.map(|_| String::new());
+                let res = client
+                    .screencap(&serial, &local)
+                    .await
+                    .map(|_| String::new());
                 send_action_toast(
                     tx,
                     res,
@@ -469,16 +483,17 @@ impl WorkerPool {
             }
             WorkerCommand::LoadSnapshot { id } => {
                 let db = self.db.lock().await;
-                let res = (|| -> anyhow::Result<(SnapshotMeta, crate::models::FullDeviceSnapshot)> {
-                    let list = db.list_snapshots()?;
-                    let meta = list
-                        .into_iter()
-                        .find(|m| m.id == id)
-                        .ok_or_else(|| anyhow::anyhow!("Snapshot #{id} not found"))?;
-                    let snap = db.load_snapshot(id)?;
-                    Ok((meta, snap))
-                })()
-                .map_err(|e| e.to_string());
+                let res =
+                    (|| -> anyhow::Result<(SnapshotMeta, crate::models::FullDeviceSnapshot)> {
+                        let list = db.list_snapshots()?;
+                        let meta = list
+                            .into_iter()
+                            .find(|m| m.id == id)
+                            .ok_or_else(|| anyhow::anyhow!("Snapshot #{id} not found"))?;
+                        let snap = db.load_snapshot(id)?;
+                        Ok((meta, snap))
+                    })()
+                    .map_err(|e| e.to_string());
                 let _ = tx.send(AppEvent::SnapshotLoaded(Box::new(res)));
             }
             WorkerCommand::DeleteSnapshot { id } => {

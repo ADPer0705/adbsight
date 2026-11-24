@@ -58,7 +58,9 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
     let actions = vec![
         Line::from(Span::styled(
             "Device Action Deck",
-            Style::default().fg(theme::ACCENT).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(theme::ACCENT)
+                .add_modifier(Modifier::BOLD),
         )),
         Line::from(""),
         action_line("F2", "Capture Screenshot (PNG)"),
@@ -69,7 +71,10 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
         action_line("w", "Wireless & QR Manager"),
         action_line("e", "Export Report (JSON/CSV/MD)"),
         Line::from(""),
-        Line::from(Span::styled("Suggested Probes:", Style::default().fg(theme::MUTED))),
+        Line::from(Span::styled(
+            "Suggested Probes:",
+            Style::default().fg(theme::MUTED),
+        )),
         Line::from("  id"),
         Line::from("  uname -a"),
         Line::from("  ip addr show wlan0"),
@@ -88,7 +93,9 @@ fn action_line(key: &str, desc: &str) -> Line<'static> {
     Line::from(vec![
         Span::styled(
             format!("[{key}] "),
-            Style::default().fg(theme::WARN).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(theme::WARN)
+                .add_modifier(Modifier::BOLD),
         ),
         Span::styled(desc.to_string(), Style::default().fg(theme::TEXT)),
     ])

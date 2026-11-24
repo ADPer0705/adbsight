@@ -4,9 +4,7 @@ use chrono::{DateTime, Local, TimeZone, Utc};
 use regex::Regex;
 
 use crate::adb::parsers::parse_content_query_rows;
-use crate::models::{
-    AccountRecord, CallLogRecord, ContactRecord, PersonalDataResult, SmsRecord,
-};
+use crate::models::{AccountRecord, CallLogRecord, ContactRecord, PersonalDataResult, SmsRecord};
 
 pub fn detect_permission_hint(output: &str) -> Option<String> {
     let lower = output.to_ascii_lowercase();
@@ -37,14 +35,20 @@ pub fn parse_contacts(output: &str) -> PersonalDataResult<ContactRecord> {
     let mut by_name: BTreeMap<String, ContactRecord> = BTreeMap::new();
 
     for row in rows {
-        let Some(name) = row.get("display_name").map(|s| s.trim()).filter(|s| !s.is_empty()) else {
+        let Some(name) = row
+            .get("display_name")
+            .map(|s| s.trim())
+            .filter(|s| !s.is_empty())
+        else {
             continue;
         };
-        let entry = by_name.entry(name.to_string()).or_insert_with(|| ContactRecord {
-            name: name.to_string(),
-            phone_numbers: Vec::new(),
-            emails: Vec::new(),
-        });
+        let entry = by_name
+            .entry(name.to_string())
+            .or_insert_with(|| ContactRecord {
+                name: name.to_string(),
+                phone_numbers: Vec::new(),
+                emails: Vec::new(),
+            });
 
         let Some(data1) = row.get("data1").map(|s| s.trim()).filter(|s| !s.is_empty()) else {
             continue;

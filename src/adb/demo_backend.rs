@@ -414,20 +414,100 @@ impl DemoAdb {
         ))
     }
 
-    pub async fn fetch_processes(&self, _serial: &str, _use_root: bool) -> Result<Vec<ProcessEntry>> {
+    pub async fn fetch_processes(
+        &self,
+        _serial: &str,
+        _use_root: bool,
+    ) -> Result<Vec<ProcessEntry>> {
         Ok(vec![
-            ProcessEntry { pid: 1842, ppid: 740, user: "system".into(), rss_kb: 312_400, vsz_kb: 18_420_000, state: "S".into(), cpu_pct: 9.4, name: "system_server".into() },
-            ProcessEntry { pid: 1104, ppid: 1, user: "system".into(), rss_kb: 128_000, vsz_kb: 4_120_000, state: "S".into(), cpu_pct: 5.2, name: "/system/bin/surfaceflinger".into() },
-            ProcessEntry { pid: 2490, ppid: 740, user: "u0_a185".into(), rss_kb: 245_100, vsz_kb: 16_900_000, state: "S".into(), cpu_pct: 4.1, name: "com.android.systemui".into() },
-            ProcessEntry { pid: 5120, ppid: 740, user: "u0_a241".into(), rss_kb: 198_300, vsz_kb: 15_200_000, state: "R".into(), cpu_pct: 3.8, name: "com.android.chrome".into() },
-            ProcessEntry { pid: 3320, ppid: 740, user: "u0_a142".into(), rss_kb: 164_800, vsz_kb: 14_800_000, state: "S".into(), cpu_pct: 2.1, name: "com.google.android.gms.persistent".into() },
-            ProcessEntry { pid: 6420, ppid: 740, user: "u0_a310".into(), rss_kb: 142_200, vsz_kb: 13_400_000, state: "S".into(), cpu_pct: 1.7, name: "com.termux".into() },
-            ProcessEntry { pid: 892, ppid: 1, user: "shell".into(), rss_kb: 14_200, vsz_kb: 2_100_000, state: "S".into(), cpu_pct: 0.9, name: "/apex/com.android.adbd/bin/adbd".into() },
-            ProcessEntry { pid: 1, ppid: 0, user: "root".into(), rss_kb: 8_920, vsz_kb: 1_240_000, state: "S".into(), cpu_pct: 0.1, name: "/system/bin/init".into() },
+            ProcessEntry {
+                pid: 1842,
+                ppid: 740,
+                user: "system".into(),
+                rss_kb: 312_400,
+                vsz_kb: 18_420_000,
+                state: "S".into(),
+                cpu_pct: 9.4,
+                name: "system_server".into(),
+            },
+            ProcessEntry {
+                pid: 1104,
+                ppid: 1,
+                user: "system".into(),
+                rss_kb: 128_000,
+                vsz_kb: 4_120_000,
+                state: "S".into(),
+                cpu_pct: 5.2,
+                name: "/system/bin/surfaceflinger".into(),
+            },
+            ProcessEntry {
+                pid: 2490,
+                ppid: 740,
+                user: "u0_a185".into(),
+                rss_kb: 245_100,
+                vsz_kb: 16_900_000,
+                state: "S".into(),
+                cpu_pct: 4.1,
+                name: "com.android.systemui".into(),
+            },
+            ProcessEntry {
+                pid: 5120,
+                ppid: 740,
+                user: "u0_a241".into(),
+                rss_kb: 198_300,
+                vsz_kb: 15_200_000,
+                state: "R".into(),
+                cpu_pct: 3.8,
+                name: "com.android.chrome".into(),
+            },
+            ProcessEntry {
+                pid: 3320,
+                ppid: 740,
+                user: "u0_a142".into(),
+                rss_kb: 164_800,
+                vsz_kb: 14_800_000,
+                state: "S".into(),
+                cpu_pct: 2.1,
+                name: "com.google.android.gms.persistent".into(),
+            },
+            ProcessEntry {
+                pid: 6420,
+                ppid: 740,
+                user: "u0_a310".into(),
+                rss_kb: 142_200,
+                vsz_kb: 13_400_000,
+                state: "S".into(),
+                cpu_pct: 1.7,
+                name: "com.termux".into(),
+            },
+            ProcessEntry {
+                pid: 892,
+                ppid: 1,
+                user: "shell".into(),
+                rss_kb: 14_200,
+                vsz_kb: 2_100_000,
+                state: "S".into(),
+                cpu_pct: 0.9,
+                name: "/apex/com.android.adbd/bin/adbd".into(),
+            },
+            ProcessEntry {
+                pid: 1,
+                ppid: 0,
+                user: "root".into(),
+                rss_kb: 8_920,
+                vsz_kb: 1_240_000,
+                state: "S".into(),
+                cpu_pct: 0.1,
+                name: "/system/bin/init".into(),
+            },
         ])
     }
 
-    pub async fn fetch_services(&self, _serial: &str, _use_root: bool) -> Result<Vec<ServiceEntry>> {
+    pub async fn fetch_services(
+        &self,
+        _serial: &str,
+        _use_root: bool,
+    ) -> Result<Vec<ServiceEntry>> {
         Ok(vec![
             ServiceEntry {
                 package: "com.google.android.gms".into(),
@@ -455,17 +535,70 @@ impl DemoAdb {
 
     pub async fn fetch_packages(&self, _serial: &str) -> Result<Vec<PackageSummary>> {
         Ok(vec![
-            PackageSummary { name: "com.android.chrome".into(), apk_path: "/data/app/~~k9/com.android.chrome/base.apk".into(), uid: Some(10241), version_code: Some(672309033), is_system: false, enabled: true },
-            PackageSummary { name: "com.android.settings".into(), apk_path: "/system_ext/priv-app/Settings/Settings.apk".into(), uid: Some(1000), version_code: Some(35), is_system: true, enabled: true },
-            PackageSummary { name: "com.android.systemui".into(), apk_path: "/system_ext/priv-app/SystemUI/SystemUI.apk".into(), uid: Some(10185), version_code: Some(35), is_system: true, enabled: true },
-            PackageSummary { name: "com.google.android.gms".into(), apk_path: "/product/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk".into(), uid: Some(10142), version_code: Some(244432038), is_system: true, enabled: true },
-            PackageSummary { name: "com.signal.securesms".into(), apk_path: "/data/app/~~m4/org.thoughtcrime.securesms/base.apk".into(), uid: Some(10288), version_code: Some(148002), is_system: false, enabled: true },
-            PackageSummary { name: "com.termux".into(), apk_path: "/data/app/~~a1/com.termux/base.apk".into(), uid: Some(10310), version_code: Some(118), is_system: false, enabled: true },
-            PackageSummary { name: "org.mozilla.firefox".into(), apk_path: "/data/app/~~z3/org.mozilla.firefox/base.apk".into(), uid: Some(10294), version_code: Some(2016058911), is_system: false, enabled: true },
+            PackageSummary {
+                name: "com.android.chrome".into(),
+                apk_path: "/data/app/~~k9/com.android.chrome/base.apk".into(),
+                uid: Some(10241),
+                version_code: Some(672309033),
+                is_system: false,
+                enabled: true,
+            },
+            PackageSummary {
+                name: "com.android.settings".into(),
+                apk_path: "/system_ext/priv-app/Settings/Settings.apk".into(),
+                uid: Some(1000),
+                version_code: Some(35),
+                is_system: true,
+                enabled: true,
+            },
+            PackageSummary {
+                name: "com.android.systemui".into(),
+                apk_path: "/system_ext/priv-app/SystemUI/SystemUI.apk".into(),
+                uid: Some(10185),
+                version_code: Some(35),
+                is_system: true,
+                enabled: true,
+            },
+            PackageSummary {
+                name: "com.google.android.gms".into(),
+                apk_path: "/product/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk".into(),
+                uid: Some(10142),
+                version_code: Some(244432038),
+                is_system: true,
+                enabled: true,
+            },
+            PackageSummary {
+                name: "com.signal.securesms".into(),
+                apk_path: "/data/app/~~m4/org.thoughtcrime.securesms/base.apk".into(),
+                uid: Some(10288),
+                version_code: Some(148002),
+                is_system: false,
+                enabled: true,
+            },
+            PackageSummary {
+                name: "com.termux".into(),
+                apk_path: "/data/app/~~a1/com.termux/base.apk".into(),
+                uid: Some(10310),
+                version_code: Some(118),
+                is_system: false,
+                enabled: true,
+            },
+            PackageSummary {
+                name: "org.mozilla.firefox".into(),
+                apk_path: "/data/app/~~z3/org.mozilla.firefox/base.apk".into(),
+                uid: Some(10294),
+                version_code: Some(2016058911),
+                is_system: false,
+                enabled: true,
+            },
         ])
     }
 
-    pub async fn fetch_package_detail(&self, _serial: &str, package: &str) -> Result<PackageDetail> {
+    pub async fn fetch_package_detail(
+        &self,
+        _serial: &str,
+        package: &str,
+    ) -> Result<PackageDetail> {
         Ok(PackageDetail {
             name: package.to_string(),
             version_name: "1.18.0-demo".into(),
@@ -485,26 +618,58 @@ impl DemoAdb {
                 "android.permission.FOREGROUND_SERVICE".into(),
             ],
             denied_permissions: vec!["android.permission.CAMERA".into()],
-            raw_excerpt: format!("Package [{package}] (demo)\n  targetSdk=35\n  installer=com.android.vending\n"),
+            raw_excerpt: format!(
+                "Package [{package}] (demo)\n  targetSdk=35\n  installer=com.android.vending\n"
+            ),
         })
     }
 
     pub fn spawn_demo_logcat(&self, tx: mpsc::UnboundedSender<LogEntry>) -> JoinHandle<()> {
         tokio::spawn(async move {
             let samples = [
-                (LogLevel::Info, "ActivityManager", "Displayed com.termux/.HomeActivity: +84ms"),
-                (LogLevel::Debug, "AdbdWifi", "TLS keepalive ACK from 192.168.1.10:5037"),
-                (LogLevel::Info, "NetworkMonitor", "Validated wlan0 IPv4/IPv6 dual-stack"),
-                (LogLevel::Warn, "ThermalEngine", "soc_big crossed 43.0C soft threshold"),
-                (LogLevel::Debug, "Choreographer", "Frame rendered in 6.2ms (120Hz)"),
-                (LogLevel::Error, "MediaProvider", "Skipped hidden .nomedia cache entry"),
-                (LogLevel::Verbose, "PowerManager", "Release partial wakelock AudioMix"),
+                (
+                    LogLevel::Info,
+                    "ActivityManager",
+                    "Displayed com.termux/.HomeActivity: +84ms",
+                ),
+                (
+                    LogLevel::Debug,
+                    "AdbdWifi",
+                    "TLS keepalive ACK from 192.168.1.10:5037",
+                ),
+                (
+                    LogLevel::Info,
+                    "NetworkMonitor",
+                    "Validated wlan0 IPv4/IPv6 dual-stack",
+                ),
+                (
+                    LogLevel::Warn,
+                    "ThermalEngine",
+                    "soc_big crossed 43.0C soft threshold",
+                ),
+                (
+                    LogLevel::Debug,
+                    "Choreographer",
+                    "Frame rendered in 6.2ms (120Hz)",
+                ),
+                (
+                    LogLevel::Error,
+                    "MediaProvider",
+                    "Skipped hidden .nomedia cache entry",
+                ),
+                (
+                    LogLevel::Verbose,
+                    "PowerManager",
+                    "Release partial wakelock AudioMix",
+                ),
             ];
             let mut idx = 0usize;
             loop {
                 let (level, tag, msg) = samples[idx % samples.len()];
                 let entry = LogEntry {
-                    timestamp: chrono::Local::now().format("%m-%d %H:%M:%S%.3f").to_string(),
+                    timestamp: chrono::Local::now()
+                        .format("%m-%d %H:%M:%S%.3f")
+                        .to_string(),
                     pid: format!("{}", 1800 + (idx % 9) * 111),
                     tid: format!("{}", 1840 + (idx % 5) * 17),
                     level,
@@ -520,12 +685,47 @@ impl DemoAdb {
         })
     }
 
-    pub async fn list_dir(&self, _serial: &str, path: &str, use_root: bool) -> Result<LsParseResult> {
+    pub async fn list_dir(
+        &self,
+        _serial: &str,
+        path: &str,
+        use_root: bool,
+    ) -> Result<LsParseResult> {
         let entries = match path {
             "/" => vec![
-                FsEntry { name: "sdcard".into(), path: "/sdcard".into(), kind: FsKind::Symlink, permissions: "lrwxrwxrwx".into(), owner: "root".into(), group: "root".into(), size: 21, modified: "2026-01-01 00:00".into(), symlink_target: Some("/storage/emulated/0".into()) },
-                FsEntry { name: "data".into(), path: "/data".into(), kind: FsKind::Directory, permissions: "drwxrwx--x".into(), owner: "system".into(), group: "system".into(), size: 4096, modified: "2026-11-24 12:00".into(), symlink_target: None },
-                FsEntry { name: "system".into(), path: "/system".into(), kind: FsKind::Directory, permissions: "drwxr-xr-x".into(), owner: "root".into(), group: "root".into(), size: 4096, modified: "2026-11-05 00:00".into(), symlink_target: None },
+                FsEntry {
+                    name: "sdcard".into(),
+                    path: "/sdcard".into(),
+                    kind: FsKind::Symlink,
+                    permissions: "lrwxrwxrwx".into(),
+                    owner: "root".into(),
+                    group: "root".into(),
+                    size: 21,
+                    modified: "2026-01-01 00:00".into(),
+                    symlink_target: Some("/storage/emulated/0".into()),
+                },
+                FsEntry {
+                    name: "data".into(),
+                    path: "/data".into(),
+                    kind: FsKind::Directory,
+                    permissions: "drwxrwx--x".into(),
+                    owner: "system".into(),
+                    group: "system".into(),
+                    size: 4096,
+                    modified: "2026-11-24 12:00".into(),
+                    symlink_target: None,
+                },
+                FsEntry {
+                    name: "system".into(),
+                    path: "/system".into(),
+                    kind: FsKind::Directory,
+                    permissions: "drwxr-xr-x".into(),
+                    owner: "root".into(),
+                    group: "root".into(),
+                    size: 4096,
+                    modified: "2026-11-05 00:00".into(),
+                    symlink_target: None,
+                },
             ],
             "/data" if !use_root => {
                 return Ok(LsParseResult {
@@ -534,18 +734,98 @@ impl DemoAdb {
                 });
             }
             "/data" => vec![
-                FsEntry { name: "local".into(), path: "/data/local".into(), kind: FsKind::Directory, permissions: "drwxr-xr-x".into(), owner: "root".into(), group: "root".into(), size: 4096, modified: "2026-11-20 10:00".into(), symlink_target: None },
-                FsEntry { name: "anr".into(), path: "/data/anr".into(), kind: FsKind::Directory, permissions: "drwxrwxr-x".into(), owner: "system".into(), group: "system".into(), size: 4096, modified: "2026-11-22 08:15".into(), symlink_target: None },
+                FsEntry {
+                    name: "local".into(),
+                    path: "/data/local".into(),
+                    kind: FsKind::Directory,
+                    permissions: "drwxr-xr-x".into(),
+                    owner: "root".into(),
+                    group: "root".into(),
+                    size: 4096,
+                    modified: "2026-11-20 10:00".into(),
+                    symlink_target: None,
+                },
+                FsEntry {
+                    name: "anr".into(),
+                    path: "/data/anr".into(),
+                    kind: FsKind::Directory,
+                    permissions: "drwxrwxr-x".into(),
+                    owner: "system".into(),
+                    group: "system".into(),
+                    size: 4096,
+                    modified: "2026-11-22 08:15".into(),
+                    symlink_target: None,
+                },
             ],
             "/data/local/tmp" | "/data/local" => vec![
-                FsEntry { name: "tmp".into(), path: "/data/local/tmp".into(), kind: FsKind::Directory, permissions: "drwxrwx--x".into(), owner: "shell".into(), group: "shell".into(), size: 4096, modified: "2026-11-24 14:20".into(), symlink_target: None },
-                FsEntry { name: "adbsight_probe.txt".into(), path: "/data/local/tmp/adbsight_probe.txt".into(), kind: FsKind::File, permissions: "-rw-r--r--".into(), owner: "shell".into(), group: "shell".into(), size: 128, modified: "2026-11-24 16:40".into(), symlink_target: None },
+                FsEntry {
+                    name: "tmp".into(),
+                    path: "/data/local/tmp".into(),
+                    kind: FsKind::Directory,
+                    permissions: "drwxrwx--x".into(),
+                    owner: "shell".into(),
+                    group: "shell".into(),
+                    size: 4096,
+                    modified: "2026-11-24 14:20".into(),
+                    symlink_target: None,
+                },
+                FsEntry {
+                    name: "adbsight_probe.txt".into(),
+                    path: "/data/local/tmp/adbsight_probe.txt".into(),
+                    kind: FsKind::File,
+                    permissions: "-rw-r--r--".into(),
+                    owner: "shell".into(),
+                    group: "shell".into(),
+                    size: 128,
+                    modified: "2026-11-24 16:40".into(),
+                    symlink_target: None,
+                },
             ],
             _ => vec![
-                FsEntry { name: "Download".into(), path: "/sdcard/Download".into(), kind: FsKind::Directory, permissions: "drwxrwx---".into(), owner: "u0_a190".into(), group: "everybody".into(), size: 4096, modified: "2026-11-24 15:10".into(), symlink_target: None },
-                FsEntry { name: "DCIM".into(), path: "/sdcard/DCIM".into(), kind: FsKind::Directory, permissions: "drwxrwx---".into(), owner: "u0_a190".into(), group: "everybody".into(), size: 4096, modified: "2026-11-23 19:02".into(), symlink_target: None },
-                FsEntry { name: "device_notes.txt".into(), path: "/sdcard/device_notes.txt".into(), kind: FsKind::File, permissions: "-rw-rw----".into(), owner: "u0_a190".into(), group: "everybody".into(), size: 256, modified: "2026-11-24 16:12".into(), symlink_target: None },
-                FsEntry { name: "crash_trace.log".into(), path: "/sdcard/crash_trace.log".into(), kind: FsKind::File, permissions: "-rw-rw----".into(), owner: "u0_a190".into(), group: "everybody".into(), size: 1024, modified: "2026-11-24 13:45".into(), symlink_target: None },
+                FsEntry {
+                    name: "Download".into(),
+                    path: "/sdcard/Download".into(),
+                    kind: FsKind::Directory,
+                    permissions: "drwxrwx---".into(),
+                    owner: "u0_a190".into(),
+                    group: "everybody".into(),
+                    size: 4096,
+                    modified: "2026-11-24 15:10".into(),
+                    symlink_target: None,
+                },
+                FsEntry {
+                    name: "DCIM".into(),
+                    path: "/sdcard/DCIM".into(),
+                    kind: FsKind::Directory,
+                    permissions: "drwxrwx---".into(),
+                    owner: "u0_a190".into(),
+                    group: "everybody".into(),
+                    size: 4096,
+                    modified: "2026-11-23 19:02".into(),
+                    symlink_target: None,
+                },
+                FsEntry {
+                    name: "device_notes.txt".into(),
+                    path: "/sdcard/device_notes.txt".into(),
+                    kind: FsKind::File,
+                    permissions: "-rw-rw----".into(),
+                    owner: "u0_a190".into(),
+                    group: "everybody".into(),
+                    size: 256,
+                    modified: "2026-11-24 16:12".into(),
+                    symlink_target: None,
+                },
+                FsEntry {
+                    name: "crash_trace.log".into(),
+                    path: "/sdcard/crash_trace.log".into(),
+                    kind: FsKind::File,
+                    permissions: "-rw-rw----".into(),
+                    owner: "u0_a190".into(),
+                    group: "everybody".into(),
+                    size: 1024,
+                    modified: "2026-11-24 13:45".into(),
+                    symlink_target: None,
+                },
             ],
         };
         Ok(LsParseResult {
@@ -651,7 +931,10 @@ impl DemoAdb {
         if !use_root {
             return Ok(PersonalDataResult {
                 records: Vec::new(),
-                permission_hint: Some("Simulated non-root restriction: toggle Root Mode ('R') to inspect Call Logs.".into()),
+                permission_hint: Some(
+                    "Simulated non-root restriction: toggle Root Mode ('R') to inspect Call Logs."
+                        .into(),
+                ),
                 raw_error: None,
             });
         }

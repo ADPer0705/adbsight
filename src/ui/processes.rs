@@ -72,7 +72,10 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
                     Constraint::Min(20),
                 ],
             )
-            .header(Row::new(["PID", "USER", "CPU%", "RSS", "S", "NAME"]).style(theme::table_header_style()))
+            .header(
+                Row::new(["PID", "USER", "CPU%", "RSS", "S", "NAME"])
+                    .style(theme::table_header_style()),
+            )
             .block(theme::panel_block(format!("Processes ({})", list.len())))
             .row_highlight_style(theme::row_highlight_style());
             frame.render_stateful_widget(table, chunks[1], &mut ts);
@@ -92,7 +95,8 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
                     Row::new(vec![
                         Cell::from(s.pid.map(|p| p.to_string()).unwrap_or_else(|| "-".into())),
                         Cell::from(s.uid.map(|u| u.to_string()).unwrap_or_else(|| "-".into())),
-                        Cell::from(s.package.as_str()).style(Style::default().fg(theme::ACCENT_ALT)),
+                        Cell::from(s.package.as_str())
+                            .style(Style::default().fg(theme::ACCENT_ALT)),
                         Cell::from(s.service_class.as_str()),
                     ])
                 })
@@ -111,8 +115,14 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
                     Constraint::Percentage(46),
                 ],
             )
-            .header(Row::new(["PID", "UID", "Package", "Service Class"]).style(theme::table_header_style()))
-            .block(theme::panel_block(format!("Running Services ({})", state.processes.services.len())))
+            .header(
+                Row::new(["PID", "UID", "Package", "Service Class"])
+                    .style(theme::table_header_style()),
+            )
+            .block(theme::panel_block(format!(
+                "Running Services ({})",
+                state.processes.services.len()
+            )))
             .row_highlight_style(theme::row_highlight_style());
             frame.render_stateful_widget(table, chunks[1], &mut ts);
         }

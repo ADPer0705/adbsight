@@ -31,9 +31,7 @@ pub fn active_panel_block(title: impl Into<String>) -> Block<'static> {
 }
 
 pub fn table_header_style() -> Style {
-    Style::default()
-        .fg(ACCENT_ALT)
-        .add_modifier(Modifier::BOLD)
+    Style::default().fg(ACCENT_ALT).add_modifier(Modifier::BOLD)
 }
 
 pub fn row_highlight_style() -> Style {

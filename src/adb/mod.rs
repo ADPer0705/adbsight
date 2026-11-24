@@ -182,11 +182,7 @@ impl AdbClient {
         }
     }
 
-    pub async fn fetch_package_detail(
-        &self,
-        serial: &str,
-        package: &str,
-    ) -> Result<PackageDetail> {
+    pub async fn fetch_package_detail(&self, serial: &str, package: &str) -> Result<PackageDetail> {
         match self {
             Self::Cli(c) => c.fetch_package_detail(serial, package).await,
             Self::Demo(d) => d.fetch_package_detail(serial, package).await,
@@ -204,7 +200,12 @@ impl AdbClient {
         }
     }
 
-    pub async fn list_dir(&self, serial: &str, path: &str, use_root: bool) -> Result<LsParseResult> {
+    pub async fn list_dir(
+        &self,
+        serial: &str,
+        path: &str,
+        use_root: bool,
+    ) -> Result<LsParseResult> {
         match self {
             Self::Cli(c) => c.list_dir(serial, path, use_root).await,
             Self::Demo(d) => d.list_dir(serial, path, use_root).await,

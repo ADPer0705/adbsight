@@ -77,21 +77,41 @@ fn render_identity(frame: &mut Frame, area: Rect, state: &AppState) {
     };
 
     let lines = vec![
-        kv("Model", &format!("{} {} ({})", id.manufacturer, id.model, id.device)),
+        kv(
+            "Model",
+            &format!("{} {} ({})", id.manufacturer, id.model, id.device),
+        ),
         kv("Serial", &id.serial),
-        kv("Android", &format!("{} (SDK {}) • Patch {}", id.android_version, id.sdk_int, id.security_patch)),
+        kv(
+            "Android",
+            &format!(
+                "{} (SDK {}) • Patch {}",
+                id.android_version, id.sdk_int, id.security_patch
+            ),
+        ),
         kv("Build / ABI", &format!("{} • {}", id.build_id, id.cpu_abi)),
-        kv("Screen", &format!("{} @ {} dpi", id.screen_size, id.screen_density)),
+        kv(
+            "Screen",
+            &format!("{} @ {} dpi", id.screen_size, id.screen_density),
+        ),
         kv("Kernel", &id.kernel_version),
         Line::from(vec![
             Span::styled("SELinux: ", Style::default().fg(theme::MUTED)),
-            Span::styled(&id.selinux, Style::default().fg(selinux_color).add_modifier(Modifier::BOLD)),
+            Span::styled(
+                &id.selinux,
+                Style::default()
+                    .fg(selinux_color)
+                    .add_modifier(Modifier::BOLD),
+            ),
             Span::styled("   Verified Boot: ", Style::default().fg(theme::MUTED)),
             Span::styled(&id.verified_boot, Style::default().fg(theme::TEXT)),
         ]),
     ];
 
-    frame.render_widget(Paragraph::new(lines).block(block).wrap(Wrap { trim: true }), area);
+    frame.render_widget(
+        Paragraph::new(lines).block(block).wrap(Wrap { trim: true }),
+        area,
+    );
 }
 
 fn render_cpu(frame: &mut Frame, area: Rect, state: &AppState) {
@@ -106,7 +126,11 @@ fn render_cpu(frame: &mut Frame, area: Rect, state: &AppState) {
 
     let parts = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Length(1), Constraint::Length(3), Constraint::Min(2)])
+        .constraints([
+            Constraint::Length(1),
+            Constraint::Length(3),
+            Constraint::Min(2),
+        ])
         .split(inner);
 
     let header = Line::from(vec![
@@ -292,14 +316,21 @@ fn render_storage(frame: &mut Frame, area: Rect, state: &AppState) {
             Line::from(vec![
                 Span::styled(
                     format!("{:<18} ", m.mount_point),
-                    Style::default().fg(theme::ACCENT_ALT).add_modifier(Modifier::BOLD),
+                    Style::default()
+                        .fg(theme::ACCENT_ALT)
+                        .add_modifier(Modifier::BOLD),
                 ),
                 Span::styled(
                     format!("{:>3}% ", m.use_pct),
                     Style::default().fg(col).add_modifier(Modifier::BOLD),
                 ),
                 Span::styled(
-                    format!("{} / {} ({} free)", format_kb(m.used_kb), format_kb(m.size_kb), format_kb(m.avail_kb)),
+                    format!(
+                        "{} / {} ({} free)",
+                        format_kb(m.used_kb),
+                        format_kb(m.size_kb),
+                        format_kb(m.avail_kb)
+                    ),
                     Style::default().fg(theme::TEXT),
                 ),
             ])
@@ -331,7 +362,9 @@ fn render_network(frame: &mut Frame, area: Rect, state: &AppState) {
                 "{} • IP {} • {} dBm",
                 n.wifi_ssid.as_deref().unwrap_or("n/a"),
                 n.wifi_ip.as_deref().unwrap_or("n/a"),
-                n.wifi_rssi_dbm.map(|r| r.to_string()).unwrap_or_else(|| "?".into())
+                n.wifi_rssi_dbm
+                    .map(|r| r.to_string())
+                    .unwrap_or_else(|| "?".into())
             ),
         ),
         kv(

@@ -119,7 +119,12 @@ pub enum SystemSubTab {
 }
 
 impl SystemSubTab {
-    pub const ALL: [Self; 4] = [Self::Properties, Self::Settings, Self::Sensors, Self::Dumpsys];
+    pub const ALL: [Self; 4] = [
+        Self::Properties,
+        Self::Settings,
+        Self::Sensors,
+        Self::Dumpsys,
+    ];
 
     pub fn title(&self) -> &'static str {
         match self {
@@ -320,11 +325,25 @@ pub enum PromptKind {
 #[derive(Debug, Clone)]
 pub enum Modal {
     Wireless(WirelessModalState),
-    Export { selected: usize },
+    Export {
+        selected: usize,
+    },
     SnapshotSave(TextInput),
-    SnapshotHistory { list: Vec<SnapshotMeta>, selected: usize },
-    ConfirmAction { title: String, message: String, action: PendingAction },
-    InputPrompt { title: String, prompt: String, input: TextInput, kind: PromptKind },
+    SnapshotHistory {
+        list: Vec<SnapshotMeta>,
+        selected: usize,
+    },
+    ConfirmAction {
+        title: String,
+        message: String,
+        action: PendingAction,
+    },
+    InputPrompt {
+        title: String,
+        prompt: String,
+        input: TextInput,
+        kind: PromptKind,
+    },
     Help,
 }
 

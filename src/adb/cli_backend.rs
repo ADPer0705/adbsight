@@ -131,7 +131,10 @@ impl CliAdb {
 
     pub async fn pair(&self, endpoint: &str, code: &str) -> Result<String> {
         let out = self
-            .run_adb(&["pair", endpoint.trim(), code.trim()], Duration::from_secs(20))
+            .run_adb(
+                &["pair", endpoint.trim(), code.trim()],
+                Duration::from_secs(20),
+            )
             .await?;
         if out.to_ascii_lowercase().contains("failed") {
             bail!("{}", out.trim());
@@ -384,11 +387,7 @@ pm list packages -d 2>/dev/null
         ))
     }
 
-    pub async fn fetch_package_detail(
-        &self,
-        serial: &str,
-        package: &str,
-    ) -> Result<PackageDetail> {
+    pub async fn fetch_package_detail(&self, serial: &str, package: &str) -> Result<PackageDetail> {
         let cmd = format!("dumpsys package {}", shell_quote(package));
         let out = self
             .shell_with_timeout(serial, &cmd, false, LONG_TIMEOUT)
@@ -424,7 +423,12 @@ pm list packages -d 2>/dev/null
         Ok(child)
     }
 
-    pub async fn list_dir(&self, serial: &str, path: &str, use_root: bool) -> Result<LsParseResult> {
+    pub async fn list_dir(
+        &self,
+        serial: &str,
+        path: &str,
+        use_root: bool,
+    ) -> Result<LsParseResult> {
         let cmd = format!("ls -la {}", shell_quote(path));
         let out = self.shell(serial, &cmd, use_root).await?;
         Ok(parse_ls_la(path, &out))
@@ -501,9 +505,7 @@ pm list packages -d 2>/dev/null
         serial: &str,
         use_root: bool,
     ) -> Result<PersonalDataResult<AccountRecord>> {
-        let out = self
-            .shell(serial, "dumpsys account", use_root)
-            .await?;
+        let out = self.shell(serial, "dumpsys account", use_root).await?;
         Ok(parse_accounts(&out))
     }
 

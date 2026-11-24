@@ -28,8 +28,14 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
     frame.render_widget(
         Tabs::new(titles)
             .select(idx)
-            .block(theme::panel_block("Personal Data Inspector [Tab switch, S snapshot, e export]"))
-            .highlight_style(Style::default().fg(theme::ACCENT).add_modifier(Modifier::BOLD)),
+            .block(theme::panel_block(
+                "Personal Data Inspector [Tab switch, S snapshot, e export]",
+            ))
+            .highlight_style(
+                Style::default()
+                    .fg(theme::ACCENT)
+                    .add_modifier(Modifier::BOLD),
+            ),
         chunks[0],
     );
 
@@ -108,17 +114,22 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
                         || s.body.to_ascii_lowercase().contains(&q)
                 })
                 .collect();
-            let selected_body = filtered
-                .get(state.personal.selected)
-                .map(|s| format!("From/To: {} ({})\nDate: {}\n\n{}", s.address, s.msg_type, s.date_display, s.body));
+            let selected_body = filtered.get(state.personal.selected).map(|s| {
+                format!(
+                    "From/To: {} ({})\nDate: {}\n\n{}",
+                    s.address, s.msg_type, s.date_display, s.body
+                )
+            });
             let rows: Vec<Row> = filtered
                 .iter()
                 .map(|s| {
                     let preview = s.body.replace('\n', " ");
                     Row::new(vec![
                         Cell::from(s.msg_type.as_str()).style(Style::default().fg(theme::WARN)),
-                        Cell::from(s.address.as_str()).style(Style::default().fg(theme::ACCENT_ALT)),
-                        Cell::from(s.date_display.as_str()).style(Style::default().fg(theme::MUTED)),
+                        Cell::from(s.address.as_str())
+                            .style(Style::default().fg(theme::ACCENT_ALT)),
+                        Cell::from(s.date_display.as_str())
+                            .style(Style::default().fg(theme::MUTED)),
                         Cell::from(preview),
                     ])
                 })
@@ -242,7 +253,12 @@ fn render_with_hint<const N: usize>(
 
     if let (Some(ha), Some(msg)) = (hint_area, hint) {
         let banner = Paragraph::new(Line::from(vec![
-            Span::styled("NOTE: ", Style::default().fg(theme::WARN).add_modifier(Modifier::BOLD)),
+            Span::styled(
+                "NOTE: ",
+                Style::default()
+                    .fg(theme::WARN)
+                    .add_modifier(Modifier::BOLD),
+            ),
             Span::styled(msg, Style::default().fg(theme::TEXT)),
         ]))
         .block(theme::panel_block("Android Provider Permission Notice"))

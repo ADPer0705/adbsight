@@ -39,7 +39,10 @@ pub fn discover_adb(override_path: Option<&Path>) -> Option<AdbBinaryInfo> {
     if let Some(home) = env::var_os("HOME").or_else(|| env::var_os("USERPROFILE")) {
         let home = PathBuf::from(home);
         candidates.push(home.join("Android/Sdk/platform-tools").join(bin_name));
-        candidates.push(home.join("Library/Android/sdk/platform-tools").join(bin_name));
+        candidates.push(
+            home.join("Library/Android/sdk/platform-tools")
+                .join(bin_name),
+        );
         candidates.push(
             home.join("AppData/Local/Android/Sdk/platform-tools")
                 .join(bin_name),
@@ -55,7 +58,11 @@ pub fn discover_adb(override_path: Option<&Path>) -> Option<AdbBinaryInfo> {
     }
 
     // Common system package locations
-    for sys_path in ["/usr/bin/adb", "/usr/local/bin/adb", "/opt/homebrew/bin/adb"] {
+    for sys_path in [
+        "/usr/bin/adb",
+        "/usr/local/bin/adb",
+        "/opt/homebrew/bin/adb",
+    ] {
         candidates.push(PathBuf::from(sys_path));
     }
 

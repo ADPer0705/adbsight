@@ -15,9 +15,17 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
         .split(area);
 
     let status_badge = if state.logcat.paused {
-        Span::styled("PAUSED", Style::default().fg(theme::WARN).add_modifier(Modifier::BOLD))
+        Span::styled(
+            "PAUSED",
+            Style::default()
+                .fg(theme::WARN)
+                .add_modifier(Modifier::BOLD),
+        )
     } else {
-        Span::styled("LIVE", Style::default().fg(theme::OK).add_modifier(Modifier::BOLD))
+        Span::styled(
+            "LIVE",
+            Style::default().fg(theme::OK).add_modifier(Modifier::BOLD),
+        )
     };
 
     let bar_line = Line::from(vec![
@@ -54,7 +62,10 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
     let start = if state.logcat.auto_scroll {
         total.saturating_sub(visible_height)
     } else {
-        state.logcat.scroll.min(total.saturating_sub(visible_height))
+        state
+            .logcat
+            .scroll
+            .min(total.saturating_sub(visible_height))
     };
 
     let items: Vec<ListItem> = filtered
@@ -71,13 +82,22 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
                 LogLevel::Silent => theme::MUTED,
             };
             ListItem::new(Line::from(vec![
-                Span::styled(format!("{} ", e.timestamp), Style::default().fg(theme::MUTED)),
+                Span::styled(
+                    format!("{} ", e.timestamp),
+                    Style::default().fg(theme::MUTED),
+                ),
                 Span::styled(format!("{:>5} ", e.pid), Style::default().fg(theme::MUTED)),
                 Span::styled(
                     format!(" {} ", e.level.code()),
-                    Style::default().fg(Color::Black).bg(lvl_color).add_modifier(Modifier::BOLD),
+                    Style::default()
+                        .fg(Color::Black)
+                        .bg(lvl_color)
+                        .add_modifier(Modifier::BOLD),
                 ),
-                Span::styled(format!(" {}: ", e.tag), Style::default().fg(theme::ACCENT_ALT)),
+                Span::styled(
+                    format!(" {}: ", e.tag),
+                    Style::default().fg(theme::ACCENT_ALT),
+                ),
                 Span::styled(e.message.clone(), Style::default().fg(theme::TEXT)),
             ]))
         })

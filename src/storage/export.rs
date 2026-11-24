@@ -32,7 +32,14 @@ pub fn export_props_csv(props: &[PropEntry], path: &Path) -> Result<()> {
 pub fn export_packages_csv(packages: &[PackageSummary], path: &Path) -> Result<()> {
     ensure_parent(path)?;
     let mut wtr = csv::Writer::from_path(path)?;
-    wtr.write_record(["name", "is_system", "enabled", "uid", "version_code", "apk_path"])?;
+    wtr.write_record([
+        "name",
+        "is_system",
+        "enabled",
+        "uid",
+        "version_code",
+        "apk_path",
+    ])?;
     for p in packages {
         wtr.write_record([
             p.name.as_str(),
@@ -50,7 +57,9 @@ pub fn export_packages_csv(packages: &[PackageSummary], path: &Path) -> Result<(
 pub fn export_processes_csv(procs: &[ProcessEntry], path: &Path) -> Result<()> {
     ensure_parent(path)?;
     let mut wtr = csv::Writer::from_path(path)?;
-    wtr.write_record(["pid", "ppid", "user", "rss_kb", "vsz_kb", "state", "cpu_pct", "name"])?;
+    wtr.write_record([
+        "pid", "ppid", "user", "rss_kb", "vsz_kb", "state", "cpu_pct", "name",
+    ])?;
     for p in procs {
         wtr.write_record([
             &p.pid.to_string(),
@@ -148,7 +157,11 @@ pub fn render_markdown_report(snap: &FullDeviceSnapshot) -> String {
     let id = &snap.identity;
     let tel = &snap.telemetry;
 
-    let _ = writeln!(out, "# ADBSight Inspection Report — {} ({})", id.model, id.serial);
+    let _ = writeln!(
+        out,
+        "# ADBSight Inspection Report — {} ({})",
+        id.model, id.serial
+    );
     let _ = writeln!(out, "\n- **Captured**: {}", snap.taken_at.to_rfc3339());
     let _ = writeln!(out, "- **Root Mode Used**: {}", snap.root_used);
 
@@ -157,14 +170,23 @@ pub fn render_markdown_report(snap: &FullDeviceSnapshot) -> String {
     let _ = writeln!(out, "|---|---|");
     for (k, v) in [
         ("Serial", id.serial.as_str()),
-        ("Brand / Manufacturer", &format!("{} / {}", id.brand, id.manufacturer)),
+        (
+            "Brand / Manufacturer",
+            &format!("{} / {}", id.brand, id.manufacturer),
+        ),
         ("Model / Device", &format!("{} ({})", id.model, id.device)),
-        ("Android / SDK", &format!("Android {} (API {})", id.android_version, id.sdk_int)),
+        (
+            "Android / SDK",
+            &format!("Android {} (API {})", id.android_version, id.sdk_int),
+        ),
         ("Security Patch", id.security_patch.as_str()),
         ("Build ID", id.build_id.as_str()),
         ("Kernel", id.kernel_version.as_str()),
         ("CPU ABI", id.cpu_abi.as_str()),
-        ("Screen", &format!("{} @ {} dpi", id.screen_size, id.screen_density)),
+        (
+            "Screen",
+            &format!("{} @ {} dpi", id.screen_size, id.screen_density),
+        ),
         ("SELinux", id.selinux.as_str()),
         ("Verified Boot", id.verified_boot.as_str()),
     ] {
@@ -172,7 +194,12 @@ pub fn render_markdown_report(snap: &FullDeviceSnapshot) -> String {
     }
 
     let _ = writeln!(out, "\n## Live Telemetry Summary\n");
-    let _ = writeln!(out, "- **CPU**: {:.1}% ({} cores)", tel.cpu.total_pct, tel.cpu.per_core_pct.len());
+    let _ = writeln!(
+        out,
+        "- **CPU**: {:.1}% ({} cores)",
+        tel.cpu.total_pct,
+        tel.cpu.per_core_pct.len()
+    );
     let _ = writeln!(
         out,
         "- **RAM**: {} / {} ({:.1}%)",
@@ -183,7 +210,10 @@ pub fn render_markdown_report(snap: &FullDeviceSnapshot) -> String {
     let _ = writeln!(
         out,
         "- **Battery**: {}% ({}, {}, {:.1}°C)",
-        tel.battery.level.map(|l| l.to_string()).unwrap_or_else(|| "?".into()),
+        tel.battery
+            .level
+            .map(|l| l.to_string())
+            .unwrap_or_else(|| "?".into()),
         tel.battery.status,
         tel.battery.health,
         tel.battery.temperature_c.unwrap_or(0.0)
@@ -227,7 +257,9 @@ pub fn render_markdown_report(snap: &FullDeviceSnapshot) -> String {
             "- `{}` (uid: {}, v{})",
             pkg.name,
             pkg.uid.map(|u| u.to_string()).unwrap_or_else(|| "?".into()),
-            pkg.version_code.map(|v| v.to_string()).unwrap_or_else(|| "?".into())
+            pkg.version_code
+                .map(|v| v.to_string())
+                .unwrap_or_else(|| "?".into())
         );
     }
 
@@ -259,12 +291,13 @@ fn ensure_parent(path: &Path) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::adb::demo_backend::DemoAdb;
     use crate::adb::AdbClient;
+    use crate::adb::demo_backend::DemoAdb;
 
     #[tokio::test]
     async fn exports_json_csv_and_markdown_reports() {
-        let tmp_dir = std::env::temp_dir().join(format!("adbsight_exp_test_{}", std::process::id()));
+        let tmp_dir =
+            std::env::temp_dir().join(format!("adbsight_exp_test_{}", std::process::id()));
         let _ = fs::remove_dir_all(&tmp_dir);
 
         let client = AdbClient::Demo(DemoAdb::new());

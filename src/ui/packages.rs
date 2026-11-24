@@ -78,7 +78,10 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
         ],
     )
     .header(Row::new(["Type", "Package Name", "UID"]).style(theme::table_header_style()))
-    .block(theme::panel_block(format!("Installed ({})", filtered.len())))
+    .block(theme::panel_block(format!(
+        "Installed ({})",
+        filtered.len()
+    )))
     .row_highlight_style(theme::row_highlight_style());
     frame.render_stateful_widget(table, split[0], &mut ts);
 
@@ -95,12 +98,21 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
     if let Some(d) = state.packages.detail.as_ref() {
         let mut lines = vec![
             kv("Package", &d.name),
-            kv("Version", &format!("{} (code {})", d.version_name, d.version_code)),
-            kv("SDK", &format!("min {} / target {}", d.min_sdk, d.target_sdk)),
+            kv(
+                "Version",
+                &format!("{} (code {})", d.version_name, d.version_code),
+            ),
+            kv(
+                "SDK",
+                &format!("min {} / target {}", d.min_sdk, d.target_sdk),
+            ),
             kv("UID / Installer", &format!("{} • {}", d.uid, d.installer)),
             kv("APK Path", &d.apk_path),
             kv("Data Dir", &d.data_dir),
-            kv("Installed / Updated", &format!("{} / {}", d.first_install, d.last_update)),
+            kv(
+                "Installed / Updated",
+                &format!("{} / {}", d.first_install, d.last_update),
+            ),
             Line::from(""),
             Line::from(Span::styled(
                 format!("Granted Permissions ({}):", d.granted_permissions.len()),
@@ -113,8 +125,13 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
         if !d.denied_permissions.is_empty() {
             lines.push(Line::from(""));
             lines.push(Line::from(Span::styled(
-                format!("Denied Runtime Permissions ({}):", d.denied_permissions.len()),
-                Style::default().fg(theme::WARN).add_modifier(Modifier::BOLD),
+                format!(
+                    "Denied Runtime Permissions ({}):",
+                    d.denied_permissions.len()
+                ),
+                Style::default()
+                    .fg(theme::WARN)
+                    .add_modifier(Modifier::BOLD),
             )));
             for p in &d.denied_permissions {
                 lines.push(Line::from(format!("  - {p}")));
@@ -131,11 +148,21 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
         let lines = vec![
             kv("Selected", &sel.name),
             kv("APK Path", &sel.apk_path),
-            kv("UID", &sel.uid.map(|u| u.to_string()).unwrap_or_else(|| "?".into())),
+            kv(
+                "UID",
+                &sel.uid.map(|u| u.to_string()).unwrap_or_else(|| "?".into()),
+            ),
             Line::from(""),
-            Line::from("Press [Enter] to run full `dumpsys package` inspection (permissions, SDKs, timestamps)."),
+            Line::from(
+                "Press [Enter] to run full `dumpsys package` inspection (permissions, SDKs, timestamps).",
+            ),
         ];
-        frame.render_widget(Paragraph::new(lines).block(detail_block).wrap(Wrap { trim: true }), split[1]);
+        frame.render_widget(
+            Paragraph::new(lines)
+                .block(detail_block)
+                .wrap(Wrap { trim: true }),
+            split[1],
+        );
     } else {
         frame.render_widget(
             Paragraph::new("Select a package to inspect.").block(detail_block),

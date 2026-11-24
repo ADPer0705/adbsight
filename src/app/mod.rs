@@ -28,9 +28,8 @@ use crate::app::worker::WorkerPool;
 use crate::models::{LogLevel, RebootMode};
 use crate::storage::config::AppConfig;
 use crate::storage::export::{
-    export_accounts_csv, export_call_logs_csv, export_contacts_csv, export_json,
-    export_logcat_csv, export_packages_csv, export_processes_csv, export_props_csv,
-    export_sms_csv,
+    export_accounts_csv, export_call_logs_csv, export_contacts_csv, export_json, export_logcat_csv,
+    export_packages_csv, export_processes_csv, export_props_csv, export_sms_csv,
 };
 use crate::ui;
 
@@ -142,13 +141,11 @@ impl App {
             AppEvent::Input(Event::Key(key)) if key.kind == KeyEventKind::Press => {
                 self.handle_key(key).await;
             }
-            AppEvent::Input(Event::Mouse(mouse)) => {
-                match mouse.kind {
-                    MouseEventKind::ScrollDown => self.move_selection(1),
-                    MouseEventKind::ScrollUp => self.move_selection(-1),
-                    _ => {}
-                }
-            }
+            AppEvent::Input(Event::Mouse(mouse)) => match mouse.kind {
+                MouseEventKind::ScrollDown => self.move_selection(1),
+                MouseEventKind::ScrollUp => self.move_selection(-1),
+                _ => {}
+            },
             AppEvent::Input(_) => {}
             AppEvent::Tick => {
                 if self.state.viewing_snapshot.is_none()
@@ -171,9 +168,12 @@ impl App {
             AppEvent::DevicesListed(Ok(devs)) => {
                 let prev = self.state.active_serial.clone();
                 self.state.devices = devs;
-                let still_present = prev
-                    .as_ref()
-                    .is_some_and(|s| self.state.devices.iter().any(|d| &d.serial == s && d.state.is_ready()));
+                let still_present = prev.as_ref().is_some_and(|s| {
+                    self.state
+                        .devices
+                        .iter()
+                        .any(|d| &d.serial == s && d.state.is_ready())
+                });
                 if !still_present {
                     if let Some(ready) = self.state.devices.iter().find(|d| d.state.is_ready()) {
                         let serial = ready.serial.clone();
@@ -188,7 +188,8 @@ impl App {
                 }
             }
             AppEvent::DevicesListed(Err(e)) => {
-                self.state.push_toast(format!("Device scan failed: {e}"), true);
+                self.state
+                    .push_toast(format!("Device scan failed: {e}"), true);
             }
             AppEvent::MdnsListed(Ok(svcs)) => {
                 self.state.mdns_services = svcs;
@@ -201,7 +202,9 @@ impl App {
             } => {
                 self.state.push_toast(message.clone(), false);
                 if let Some(ep) = connected_endpoint {
-                    self.state.config.bookmark_wifi_device(ep.clone(), ep.clone());
+                    self.state
+                        .config
+                        .bookmark_wifi_device(ep.clone(), ep.clone());
                     let _ = self.state.config.save();
                     self.state.active_serial = Some(ep);
                 }
@@ -391,7 +394,8 @@ impl App {
                     let excess = self.state.shell.output_lines.len() - 2000;
                     self.state.shell.output_lines.drain(0..excess);
                 }
-                self.state.shell.scroll = self.state.shell.output_lines.len().saturating_sub(1) as u16;
+                self.state.shell.scroll =
+                    self.state.shell.output_lines.len().saturating_sub(1) as u16;
             }
             AppEvent::ActionToast {
                 ok,
@@ -427,7 +431,9 @@ impl App {
                     self.state
                         .push_toast(format!("Viewing offline snapshot: {label}"), false);
                 }
-                Err(e) => self.state.push_toast(format!("Load snapshot failed: {e}"), true),
+                Err(e) => self
+                    .state
+                    .push_toast(format!("Load snapshot failed: {e}"), true),
             },
         }
     }
@@ -477,7 +483,8 @@ impl App {
     pub async fn refresh_active_tab(&mut self) {
         if self.state.viewing_snapshot.is_some() {
             self.state.viewing_snapshot = None;
-            self.state.push_toast("Returned to live device inspection", false);
+            self.state
+                .push_toast("Returned to live device inspection", false);
         }
         let Some(serial) = self.state.active_serial.clone() else {
             let _ = self.cmd_tx.send(WorkerCommand::RefreshDevices);
@@ -969,7 +976,8 @@ impl App {
                     && let Some(serial) = self.state.active_serial.clone()
                 {
                     if pkg.apk_path.is_empty() {
-                        self.state.push_toast("APK path unknown for this package", true);
+                        self.state
+                            .push_toast("APK path unknown for this package", true);
                     } else {
                         let out = self
                             .state
@@ -1082,7 +1090,8 @@ impl App {
                         .resolved_export_dir()
                         .join("pulled")
                         .join(&entry.name);
-                    let mut inp = TextInput::with_value(default_local.to_string_lossy().to_string());
+                    let mut inp =
+                        TextInput::with_value(default_local.to_string_lossy().to_string());
                     inp.active = true;
                     self.state.modal = Some(Modal::InputPrompt {
                         title: "Pull Remote Path".into(),
@@ -1147,12 +1156,10 @@ impl App {
         };
 
         match modal {
-            Modal::Help => {
-                match key.code {
-                    KeyCode::Esc | KeyCode::Char('?') | KeyCode::Char('q') | KeyCode::Enter => {}
-                    _ => self.state.modal = Some(Modal::Help),
-                }
-            }
+            Modal::Help => match key.code {
+                KeyCode::Esc | KeyCode::Char('?') | KeyCode::Char('q') | KeyCode::Enter => {}
+                _ => self.state.modal = Some(Modal::Help),
+            },
             Modal::Export { mut selected } => match key.code {
                 KeyCode::Esc | KeyCode::Char('q') => {}
                 KeyCode::Up | KeyCode::Char('k') => {
@@ -1210,7 +1217,9 @@ impl App {
                 }
                 KeyCode::Enter => {
                     if let Some(meta) = list.get(selected) {
-                        let _ = self.cmd_tx.send(WorkerCommand::LoadSnapshot { id: meta.id });
+                        let _ = self
+                            .cmd_tx
+                            .send(WorkerCommand::LoadSnapshot { id: meta.id });
                     }
                 }
                 KeyCode::Char('d') | KeyCode::Delete => {
@@ -1265,11 +1274,8 @@ impl App {
                                     .file_name()
                                     .map(|n| n.to_string_lossy().to_string())
                                     .unwrap_or_else(|| "upload.bin".into());
-                                let remote = format!(
-                                    "{}/{}",
-                                    remote_dir.trim_end_matches('/'),
-                                    fname
-                                );
+                                let remote =
+                                    format!("{}/{}", remote_dir.trim_end_matches('/'), fname);
                                 self.state.modal = Some(Modal::ConfirmAction {
                                     title: "Confirm File Push".into(),
                                     message: format!("Push `{val}` -> `{remote}`?"),
@@ -1388,8 +1394,7 @@ impl App {
                                     }
                                 }
                                 1 => {
-                                    if let Some(svc) =
-                                        self.state.mdns_services.get(w.selected_mdns)
+                                    if let Some(svc) = self.state.mdns_services.get(w.selected_mdns)
                                     {
                                         let ep = format!("{}:{}", svc.address, svc.port);
                                         let _ = self.cmd_tx.send(WorkerCommand::ConnectWifi {
@@ -1451,10 +1456,9 @@ impl App {
                                             alias: None,
                                         });
                                     } else {
-                                        let _ = self.cmd_tx.send(WorkerCommand::PairWifi {
-                                            endpoint: ep,
-                                            code,
-                                        });
+                                        let _ = self
+                                            .cmd_tx
+                                            .send(WorkerCommand::PairWifi { endpoint: ep, code });
                                     }
                                 }
                             }
@@ -1495,9 +1499,11 @@ impl App {
                     .send(WorkerCommand::ClearAppData { serial, package });
             }
             PendingAction::PushFile { local, remote } => {
-                let _ = self
-                    .cmd_tx
-                    .send(WorkerCommand::PushPath { serial, local, remote });
+                let _ = self.cmd_tx.send(WorkerCommand::PushPath {
+                    serial,
+                    local,
+                    remote,
+                });
             }
             PendingAction::Reboot(mode) => {
                 let _ = self.cmd_tx.send(WorkerCommand::Reboot { serial, mode });
@@ -1567,7 +1573,9 @@ impl App {
                     Tab::Shell => export_json(&self.state.shell.output_lines, &out),
                 };
                 match res {
-                    Ok(()) => self.state.push_toast(format!("Exported -> {}", out.display()), false),
+                    Ok(()) => self
+                        .state
+                        .push_toast(format!("Exported -> {}", out.display()), false),
                     Err(e) => self.state.push_toast(format!("Export failed: {e}"), true),
                 }
             }
@@ -1601,8 +1609,12 @@ impl App {
                     _ => export_props_csv(&self.state.system.props, &out),
                 };
                 match res {
-                    Ok(()) => self.state.push_toast(format!("Exported -> {}", out.display()), false),
-                    Err(e) => self.state.push_toast(format!("CSV export failed: {e}"), true),
+                    Ok(()) => self
+                        .state
+                        .push_toast(format!("Exported -> {}", out.display()), false),
+                    Err(e) => self
+                        .state
+                        .push_toast(format!("CSV export failed: {e}"), true),
                 }
             }
         }

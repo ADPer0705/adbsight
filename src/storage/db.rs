@@ -242,8 +242,8 @@ impl SnapshotDb {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::adb::demo_backend::DemoAdb;
     use crate::adb::AdbClient;
+    use crate::adb::demo_backend::DemoAdb;
 
     #[tokio::test]
     async fn saves_lists_loads_and_deduplicates_snapshots() {

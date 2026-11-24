@@ -41,16 +41,12 @@ pub fn render_modal(frame: &mut Frame, area: Rect, state: &AppState) {
     }
 }
 
-fn render_wireless_modal(
-    frame: &mut Frame,
-    area: Rect,
-    state: &AppState,
-    w: &WirelessModalState,
-) {
+fn render_wireless_modal(frame: &mut Frame, area: Rect, state: &AppState, w: &WirelessModalState) {
     let popup = theme::centered_rect(86, 86, area);
     frame.render_widget(Clear, popup);
 
-    let outer = theme::active_panel_block("Wireless Debugging & Device Manager [Tab switch, Esc close]");
+    let outer =
+        theme::active_panel_block("Wireless Debugging & Device Manager [Tab switch, Esc close]");
     let inner = outer.inner(popup);
     frame.render_widget(outer, popup);
 
@@ -71,7 +67,11 @@ fn render_wireless_modal(
     ])
     .select(sub_idx)
     .block(theme::panel_block("Mode"))
-    .highlight_style(Style::default().fg(theme::ACCENT).add_modifier(Modifier::BOLD));
+    .highlight_style(
+        Style::default()
+            .fg(theme::ACCENT)
+            .add_modifier(Modifier::BOLD),
+    );
     frame.render_widget(tabs, chunks[0]);
 
     match w.sub_tab {
@@ -88,7 +88,9 @@ fn render_wireless_modal(
 
             // Attached Devices
             let dev_items: Vec<ListItem> = if state.devices.is_empty() {
-                vec![ListItem::new("No attached devices. Press [r] to refresh or Tab for QR/IP.")]
+                vec![ListItem::new(
+                    "No attached devices. Press [r] to refresh or Tab for QR/IP.",
+                )]
             } else {
                 state
                     .devices
@@ -114,7 +116,9 @@ fn render_wireless_modal(
                 d_state.select(Some(w.selected_device.min(state.devices.len() - 1)));
             }
             let dev_block = if w.focus_section == 0 {
-                theme::active_panel_block("[1] Attached Devices (Enter=Select, t=USB->WiFi, x=Disconnect)")
+                theme::active_panel_block(
+                    "[1] Attached Devices (Enter=Select, t=USB->WiFi, x=Disconnect)",
+                )
             } else {
                 theme::panel_block("[1] Attached Devices")
             };
@@ -128,7 +132,9 @@ fn render_wireless_modal(
 
             // mDNS Discovered
             let mdns_items: Vec<ListItem> = if state.mdns_services.is_empty() {
-                vec![ListItem::new("No mDNS wireless services broadcast yet. Enable Wireless Debugging on phone.")]
+                vec![ListItem::new(
+                    "No mDNS wireless services broadcast yet. Enable Wireless Debugging on phone.",
+                )]
             } else {
                 state
                     .mdns_services
@@ -162,7 +168,9 @@ fn render_wireless_modal(
 
             // Saved Bookmarks
             let bm_items: Vec<ListItem> = if state.config.saved_devices.is_empty() {
-                vec![ListItem::new("No saved Wi-Fi bookmarks yet (auto-saved on connect).")]
+                vec![ListItem::new(
+                    "No saved Wi-Fi bookmarks yet (auto-saved on connect).",
+                )]
             } else {
                 state
                     .config
@@ -174,7 +182,8 @@ fn render_wireless_modal(
             let mut b_state = ListState::default();
             if !state.config.saved_devices.is_empty() {
                 b_state.select(Some(
-                    w.selected_bookmark.min(state.config.saved_devices.len() - 1),
+                    w.selected_bookmark
+                        .min(state.config.saved_devices.len() - 1),
                 ));
             }
             let bm_block = if w.focus_section == 2 {
@@ -213,7 +222,9 @@ fn render_wireless_modal(
                 vec![
                     Line::from(Span::styled(
                         "Android 11+ Wireless QR Pairing",
-                        Style::default().fg(theme::ACCENT).add_modifier(Modifier::BOLD),
+                        Style::default()
+                            .fg(theme::ACCENT)
+                            .add_modifier(Modifier::BOLD),
                     )),
                     Line::from(""),
                     Line::from("1. On Android: Settings -> Developer options"),
@@ -262,7 +273,9 @@ fn render_wireless_modal(
             );
 
             let code_block = if w.active_field == WirelessField::PairingCode {
-                theme::active_panel_block("6-Digit Pairing Code (leave empty to direct `adb connect`)")
+                theme::active_panel_block(
+                    "6-Digit Pairing Code (leave empty to direct `adb connect`)",
+                )
             } else {
                 theme::panel_block("6-Digit Pairing Code (optional)")
             };
@@ -296,7 +309,9 @@ fn render_export_modal(frame: &mut Frame, area: Rect, selected: usize) {
 
     frame.render_stateful_widget(
         List::new(items)
-            .block(theme::active_panel_block("Export Data [Enter export, Esc cancel]"))
+            .block(theme::active_panel_block(
+                "Export Data [Enter export, Esc cancel]",
+            ))
             .highlight_style(theme::row_highlight_style()),
         popup,
         &mut ls,
@@ -313,7 +328,9 @@ fn render_snapshot_history(
     frame.render_widget(Clear, popup);
 
     let items: Vec<ListItem> = if list.is_empty() {
-        vec![ListItem::new("No snapshots saved yet. Press [S] on any device to capture one.")]
+        vec![ListItem::new(
+            "No snapshots saved yet. Press [S] on any device to capture one.",
+        )]
     } else {
         list.iter()
             .map(|m| {
@@ -355,7 +372,10 @@ fn render_confirm_modal(frame: &mut Frame, area: Rect, title: &str, message: &st
         Line::from(Span::styled(message, Style::default().fg(theme::TEXT))),
         Line::from(""),
         Line::from(vec![
-            Span::styled("[Enter / y] Confirm   ", Style::default().fg(theme::ERR).add_modifier(Modifier::BOLD)),
+            Span::styled(
+                "[Enter / y] Confirm   ",
+                Style::default().fg(theme::ERR).add_modifier(Modifier::BOLD),
+            ),
             Span::styled("[Esc / n] Cancel", Style::default().fg(theme::OK)),
         ]),
     ];
@@ -383,7 +403,9 @@ fn render_single_input_modal(
         Line::from(""),
         Line::from(Span::styled(
             format!("> {value}_"),
-            Style::default().fg(theme::ACCENT).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(theme::ACCENT)
+                .add_modifier(Modifier::BOLD),
         )),
         Line::from(""),
         Line::from(Span::styled(
@@ -407,17 +429,27 @@ fn render_help_modal(frame: &mut Frame, area: Rect) {
     let lines = vec![
         Line::from(Span::styled(
             "ADBSight — Keybindings & Deep Inspector Reference",
-            Style::default().fg(theme::ACCENT).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(theme::ACCENT)
+                .add_modifier(Modifier::BOLD),
         )),
         Line::from(""),
         Line::from("  1 .. 8          Switch Inspector Tabs (Dashboard..Shell)"),
-        Line::from("  w               Wireless & Device Manager (QR Pair, mDNS, USB->WiFi, IP:Port)"),
-        Line::from("  R               Toggle Root Mode (unlocks protected providers & /data paths)"),
+        Line::from(
+            "  w               Wireless & Device Manager (QR Pair, mDNS, USB->WiFi, IP:Port)",
+        ),
+        Line::from(
+            "  R               Toggle Root Mode (unlocks protected providers & /data paths)",
+        ),
         Line::from("  r               Refresh active tab (or return to live device from snapshot)"),
         Line::from("  S / H           Save full SQLite snapshot / Browse snapshot history"),
-        Line::from("  e               Export active tab or full device dossier (JSON / CSV / Markdown)"),
+        Line::from(
+            "  e               Export active tab or full device dossier (JSON / CSV / Markdown)",
+        ),
         Line::from("  j/k or ↑/↓      Navigate rows (PgUp/PgDn scroll detail panes)"),
-        Line::from("  / and Esc       Search/filter active view; Esc clears filter or closes modal"),
+        Line::from(
+            "  / and Esc       Search/filter active view; Esc clears filter or closes modal",
+        ),
         Line::from("  F2 / F3 / F4    Screenshot (PNG) / Reboot (confirmed) / Quick Snapshot"),
         Line::from("  q / Ctrl+C      Quit ADBSight"),
         Line::from(""),

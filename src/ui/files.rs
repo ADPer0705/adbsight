@@ -72,7 +72,8 @@ pub fn render(frame: &mut Frame, area: Rect, state: &AppState) {
                     e.name.clone()
                 };
                 Row::new(vec![
-                    Cell::from(kind_tag).style(Style::default().fg(col).add_modifier(Modifier::BOLD)),
+                    Cell::from(kind_tag)
+                        .style(Style::default().fg(col).add_modifier(Modifier::BOLD)),
                     Cell::from(display_name).style(Style::default().fg(col)),
                     Cell::from(if e.kind == FsKind::Directory {
                         "-".to_string()

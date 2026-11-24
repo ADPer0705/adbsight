@@ -506,10 +506,7 @@ LOAD=1.25 1.10 0.95 2/840 12345
         // Simulate 2s later with +400 busy, +1000 total CPU ticks -> 40% CPU
         net1.timestamp_ms -= 2000;
         let tick2 = tick1
-            .replace(
-                "cpu  1000 100 500 8400",
-                "cpu  1300 100 600 9000",
-            )
+            .replace("cpu  1000 100 500 8400", "cpu  1300 100 600 9000")
             .replace(
                 "wlan0: 1000000 100 0 0 0 0 0 0 500000",
                 "wlan0: 1200000 120 0 0 0 0 0 0 600000",

@@ -5,9 +5,7 @@ pub fn parse_adb_devices_l(output: &str) -> Vec<DeviceSummary> {
     let mut devices = Vec::new();
     for line in output.lines() {
         let trimmed = line.trim();
-        if trimmed.is_empty()
-            || trimmed.starts_with("List of devices")
-            || trimmed.starts_with('*')
+        if trimmed.is_empty() || trimmed.starts_with("List of devices") || trimmed.starts_with('*')
         {
             continue;
         }

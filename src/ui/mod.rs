@@ -113,7 +113,9 @@ fn render_header(frame: &mut Frame, area: Rect, state: &AppState) {
     let status = Paragraph::new(Line::from(vec![
         Span::styled(
             dev_label,
-            Style::default().fg(theme::TEXT).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(theme::TEXT)
+                .add_modifier(Modifier::BOLD),
         ),
         Span::raw(" "),
         root_badge,
@@ -168,8 +170,16 @@ fn render_toasts(frame: &mut Frame, area: Rect, state: &AppState) {
             height: 3,
         };
         frame.render_widget(Clear, rect);
-        let border_col = if toast.is_error { theme::ERR } else { theme::OK };
-        let title = if toast.is_error { " Error " } else { " Notice " };
+        let border_col = if toast.is_error {
+            theme::ERR
+        } else {
+            theme::OK
+        };
+        let title = if toast.is_error {
+            " Error "
+        } else {
+            " Notice "
+        };
         let block = ratatui::widgets::Block::bordered()
             .border_style(Style::default().fg(border_col))
             .title(title);
