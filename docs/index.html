@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADBSight Wiki — Rust TUI Android Deep Inspector</title>
+  <meta name="description" content="Official documentation & wiki for ADBSight (adbsight v1.0.0) — a cross-platform Rust + Ratatui Android Deep Inspector with Wi-Fi Wireless Debugging, QR code pairing, SQLite snapshots, and JSON/CSV/Markdown reports." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <button id="menu-btn" class="menu-btn" aria-label="Toggle navigation">[≡]</button>
+      <a href="#overview" class="brand">
+        <span class="brand-glyph">╭─</span>
+        <span>ADBSight // Wiki</span>
+      </a>
+      <span class="pill pill-cyan">v1.0.0</span>
+      <span class="pill pill-amber hide-mobile">RUST TUI</span>
+    </div>
+
+    <div class="topbar-search">
+      <input id="wiki-search" type="search" placeholder="Search wiki (press /)..." aria-label="Search wiki" />
+      <kbd class="search-hint">/</kbd>
+      <div id="search-results" class="search-results"></div>
+    </div>
+
+    <div class="topbar-links">
+      <a class="btn-link hide-mobile" href="https://github.com/ADPer0705/adbsight" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn-link btn-primary" href="https://github.com/ADPer0705/adbsight/releases/tag/v1.0.0" target="_blank" rel="noopener">v1.0.0 Release</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar" class="sidebar">
+      <div class="nav-group">
+        <div class="nav-group-title">Getting Started</div>
+        <a class="nav-link active" href="#overview"><span class="nav-prefix">01</span> Overview &amp; Preview</a>
+        <a class="nav-link" href="#installation"><span class="nav-prefix">02</span> Install &amp; Quick Start</a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">Wireless &amp; Transport</div>
+        <a class="nav-link" href="#wireless"><span class="nav-prefix">03</span> Wireless Debugging &amp; QR</a>
+        <a class="nav-link" href="#root-mode"><span class="nav-prefix">04</span> Root-Aware Inspection</a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">8 Inspector Modules</div>
+        <a class="nav-link" href="#modules"><span class="nav-prefix">05</span> All 8 TUI Modules</a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">Persistence &amp; CLI</div>
+        <a class="nav-link" href="#storage-cli"><span class="nav-prefix">06</span> SQLite, Exports &amp; CLI</a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">Reference</div>
+        <a class="nav-link" href="#keybindings"><span class="nav-prefix">07</span> Keybindings Matrix</a>
+        <a class="nav-link" href="#architecture"><span class="nav-prefix">08</span> Architecture</a>
+        <a class="nav-link" href="#troubleshooting"><span class="nav-prefix">09</span> Troubleshooting</a>
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- 01 OVERVIEW -->
+      <section id="overview" class="wiki-section">
+        <div class="section-tag">01 // Rust TUI Android Deep Inspector</div>
+        <h1>ADBSight</h1>
+        <p class="lead">
+          A fast, non-blocking <strong>Rust + Ratatui</strong> terminal inspector for Android devices over <strong>USB and Wi-Fi ADB</strong>. Built to see everything on your phone — from batched live CPU/RAM/thermal telemetry and streaming Logcat to APK permissions, filesystems, and personal databases — with embedded SQLite snapshots and JSON/CSV/Markdown exports.
+        </p>
+
+        <div class="hero-badges">
+          <span class="pill pill-cyan">ratatui 0.30 + tokio</span>
+          <span class="pill pill-green">Wi-Fi QR Pair + mDNS</span>
+          <span class="pill pill-amber">Bundled SQLite Snapshots</span>
+          <span class="pill pill-cyan">Built-in --demo Simulator</span>
+        </div>
+
+        <div class="hero-actions">
+          <a class="btn-link btn-primary" href="#installation">Get Started →</a>
+          <a class="btn-link" href="#wireless">Wi-Fi QR Pairing Guide</a>
+          <a class="btn-link" href="https://github.com/ADPer0705/adbsight/releases/tag/v1.0.0" target="_blank" rel="noopener">Download v1.0.0 Binary</a>
+        </div>
+
+        <div class="tui-frame">
+          <div class="tui-titlebar">
+            <div class="tui-dots">
+              <span class="dot dot-r"></span>
+              <span class="dot dot-y"></span>
+              <span class="dot dot-g"></span>
+              <span style="margin-left:8px;">adbsight v1.0.0 — Interactive TUI Preview</span>
+            </div>
+            <span>Target: [Wi-Fi] Pixel 9 Pro • SU-ROOT</span>
+          </div>
+          <div class="tui-tabbar" role="tablist">
+            <button class="tui-tab active" data-tab="1">1 Dashboard</button>
+            <button class="tui-tab" data-tab="2">2 System</button>
+            <button class="tui-tab" data-tab="3">3 Processes</button>
+            <button class="tui-tab" data-tab="4">4 Packages</button>
+            <button class="tui-tab" data-tab="5">5 Logcat</button>
+            <button class="tui-tab" data-tab="6">6 Files</button>
+            <button class="tui-tab" data-tab="7">7 Personal</button>
+            <button class="tui-tab" data-tab="w">w Wireless QR</button>
+          </div>
+          <pre id="tui-screen" class="tui-screen"><span class="c-cyan">╭─ Device Identity &amp; Security ─────────────────╮╭─ CPU &amp; Load ─────────────────────────────────╮</span>
+<span class="c-muted">│</span> Model:   Google Pixel 9 Pro (caiman)         <span class="c-muted">││</span> <span class="c-green">Total: 27.4%</span>  •  Cores: 8  •  Load: 1.42 1.28  <span class="c-muted">│</span>
+<span class="c-muted">│</span> Serial:  192.168.1.42:41893 (<span class="c-cyan">Wi-Fi</span>)          <span class="c-muted">││</span> <span class="c-cyan">▁▂▃▄▆▅▃▂▄▆▇▅▃▄▆▅▄▃▂▃▄▅▆▄▃▂▃▄▅▃▂▃▄▅▆▅▄▃▂▃▄▅▃▂</span> <span class="c-muted">│</span>
+<span class="c-muted">│</span> Android: 15 (SDK 35) • Patch 2026-11-05      <span class="c-muted">││</span> C0: 31%  C1: 24%  C2: 40%  C3: 18%             <span class="c-muted">│</span>
+<span class="c-muted">│</span> SELinux: <span class="c-green">Enforcing</span>   Verified Boot: green     <span class="c-muted">││</span> C4: 29%  C5: 22%  C6: 35%  C7: 20%             <span class="c-muted">│</span>
+<span class="c-cyan">╰──────────────────────────────────────────────╯╰──────────────────────────────────────────────╯</span>
+<span class="c-cyan">╭─ Memory &amp; Swap ──────────────────────────────╮╭─ Battery &amp; Thermals ─────────────────────────╮</span>
+<span class="c-muted">│</span> <span class="c-green">███████████████░░░░░░░░░░░</span> 56.1% (8.77/15.6G)<span class="c-muted">││</span> <span class="c-green">█████████████████████░░░░</span> 87% Discharging 32°C <span class="c-muted">│</span>
+<span class="c-muted">│</span> <span class="c-cyan">███░░░░░░░░░░░░░░░░░░░░░░░</span> Swap 13.7%        <span class="c-muted">││</span> Health: Good • 4120 mV • -385 mA               <span class="c-muted">│</span>
+<span class="c-muted">│</span> Avail: 6.86 GiB  Cached: 4.62 GiB            <span class="c-muted">││</span> Thermals: soc_big: 41.2°C | gpu: 38.6°C      <span class="c-muted">│</span>
+<span class="c-cyan">╰──────────────────────────────────────────────╯╰──────────────────────────────────────────────╯</span>
+<span class="c-cyan">╭─ Storage Mounts ─────────────────────────────╮╭─ Network &amp; Throughput ───────────────────────╮</span>
+<span class="c-muted">│</span> /data              <span class="c-green">41%</span>  93.8 / 228.9 GiB     <span class="c-muted">││</span> Wi-Fi: Lab-5GHz-Mesh • 192.168.1.42 • -51dBm <span class="c-muted">│</span>
+<span class="c-muted">│</span> /storage/emulated  <span class="c-green">41%</span>  93.8 / 228.9 GiB     <span class="c-muted">││</span> Rate:  RX 54.2 KiB/s   TX 18.4 KiB/s         <span class="c-muted">│</span>
+<span class="c-muted">│</span> /system            <span class="c-red">94%</span>  4.30 / 4.58 GiB      <span class="c-muted">││</span> <span class="c-green">▂▃▅▃▂▄▆▇▅▃▂▃▄▆▅▃▂▄▅▇▆▄▃▂▃▄▅▆▅▃▂▃▄▅▃▂▃▄▆▅▄▃▂</span>   <span class="c-muted">│</span>
+<span class="c-cyan">╰──────────────────────────────────────────────╯╰──────────────────────────────────────────────╯</span></pre>
+          <div class="tui-footerbar">
+            <span>[1-8] Tabs  [w] WiFi/Devices  [R] Root  [r] Refresh  [S/H] Snap/Hist  [e] Export  [?] Help  [q] Quit</span>
+            <span>adb: ~/Android/Sdk/platform-tools/adb [mDNS]</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 INSTALLATION -->
+      <section id="installation" class="wiki-section">
+        <div class="section-tag">02 // Getting Started</div>
+        <h2>Installation &amp; Quick Start</h2>
+        <p>
+          You can download the prebuilt Linux <code>v1.0.0</code> release binary directly or compile from source on Linux, macOS, or Windows with Rust <code>1.88+</code>.
+        </p>
+
+        <div class="code-wrap">
+          <div class="code-head"><span>bash — build &amp; run from source</span><button class="copy-btn">Copy</button></div>
+<pre>git clone https://github.com/ADPer0705/adbsight.git
+cd adbsight
+
+# Try the built-in simulated Android 15 device immediately (no phone needed)
+cargo run --release -- --demo
+
+# Or launch against your real USB / Wi-Fi devices
+cargo run --release</pre>
+        </div>
+
+        <div class="code-wrap">
+          <div class="code-head"><span>bash — install v1.0.0 binary on Linux x86_64</span><button class="copy-btn">Copy</button></div>
+<pre>curl -LO https://github.com/ADPer0705/adbsight/releases/download/v1.0.0/adbsight-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
+tar -xzf adbsight-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
+./adbsight --version</pre>
+        </div>
+
+        <h3>ADB Binary Auto-Discovery</h3>
+        <p>Even if <code>adb</code> is not on your shell <code>PATH</code>, <code>adbsight</code> automatically locates Android Platform-Tools in this priority order:</p>
+        <ol>
+          <li><code>--adb-path &lt;PATH&gt;</code> CLI flag or <code>adb_path</code> in <code>config.toml</code></li>
+          <li>System <code>PATH</code></li>
+          <li><code>$ANDROID_HOME/platform-tools/adb</code> and <code>$ANDROID_SDK_ROOT/platform-tools/adb</code></li>
+          <li>Standard SDK directories: <code>~/Android/Sdk/platform-tools/adb</code> (Linux), <code>~/Library/Android/sdk/platform-tools/adb</code> (macOS), and <code>%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe</code> (Windows)</li>
+        </ol>
+      </section>
+
+      <!-- 03 WIRELESS DEBUGGING -->
+      <section id="wireless" class="wiki-section">
+        <div class="section-tag">03 // Remote Wireless ADB</div>
+        <h2>Wireless Debugging &amp; QR Pairing</h2>
+        <p>
+          Press <kbd>w</kbd> anywhere in <code>adbsight</code> to open the <strong>Wireless Debugging &amp; Device Manager</strong>. Every wireless workflow supported by modern Android is built directly into the TUI.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">1. QR Code Pairing (Android 11+)</div>
+            <p>
+              Press <kbd>w</kbd> → <kbd>Tab</kbd> to open the <strong>QR Code Pair</strong> view. <code>adbsight</code> generates a random service &amp; password payload (<code>WIFI:T:ADB;S:adbsight-...;P:...;;</code>), renders a scannable Unicode half-block QR code in your terminal, watches <code>adb mdns services</code> every second, and automatically runs <code>adb pair</code> followed by <code>adb connect</code>.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title">2. mDNS Auto-Discovery &amp; Bookmarks</div>
+            <p>
+              Devices broadcasting <code>_adb-tls-connect._tcp</code> or <code>_adb-tls-pairing._tcp</code> appear automatically in section <code>[2]</code>. Once connected, Wi-Fi endpoints are bookmarked in <code>config.toml</code> for one-Enter reconnection.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title">3. One-Key USB → Wi-Fi Handoff</div>
+            <p>
+              Have a phone plugged in over USB? Select it in the Wireless modal and press <kbd>t</kbd>. <code>adbsight</code> reads the device's <code>wlan0</code> IPv4 address, executes <code>adb tcpip 5555</code>, and connects wirelessly so you can unplug the cable.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title">4. Manual Pair Code &amp; Direct IP:Port</div>
+            <p>
+              Switch to tab 3 in the Wireless modal to enter an endpoint (<code>192.168.1.42:37185</code>) and optional 6-digit pairing code, or connect directly on startup via <code>adbsight --connect 192.168.1.42:5555</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-title">PHONE SETUP FOR QR PAIRING</div>
+          On Android 11+, enable <strong>Settings → Developer options → Wireless debugging</strong>, tap <strong>Pair device with QR code</strong>, and point your camera at the terminal QR code. Make sure your laptop and phone are on the same Wi-Fi subnet (not AP-isolated).
+        </div>
+      </section>
+
+      <!-- 04 ROOT MODE -->
+      <section id="root-mode" class="wiki-section">
+        <div class="section-tag">04 // Privilege &amp; Safety</div>
+        <h2>Root-Aware Inspection</h2>
+        <p>
+          <code>adbsight</code> works out of the box on stock, unrooted Android devices. Upon connecting, it checks <code>id -u</code> and <code>which su</code> to report <code>USER</code>, <code>ADB-ROOT</code>, or <code>SU-ROOT</code> in the top-right status bar.
+        </p>
+        <ul>
+          <li>Press <kbd>R</kbd> to toggle <strong>Root Mode</strong> on rooted devices or emulators.</li>
+          <li>When enabled, shell probes, process tables, <code>dumpsys</code>, <code>/data</code> directory listings, and protected content providers (<code>content://sms</code>, <code>content://call_log/calls</code>) transparently elevate through <code>adbd root</code> or <code>su -c</code>.</li>
+          <li>All modifying or destructive actions (Kill PID, Force-Stop, Clear App Data, File Push, Reboot) require explicit confirmation via a modal prompt.</li>
+        </ul>
+      </section>
+
+      <!-- 05 8 MODULES -->
+      <section id="modules" class="wiki-section">
+        <div class="section-tag">05 // Deep Inspector</div>
+        <h2>The 8 Inspector Modules</h2>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">[1] Dashboard</div>
+            <p>Device identity, SELinux &amp; verified-boot state, CPU total + per-core sparkline, RAM/Swap gauges, battery health/voltage/current/temp, thermal zones, storage mounts, and Wi-Fi RX/TX sparkline — fetched in one batched ADB probe per tick.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">[2] System &amp; Hardware</div>
+            <p>Four sub-tabs (<kbd>Tab</kbd>): searchable <code>getprop</code>, <code>settings</code> (<code>system</code>/<code>secure</code>/<code>global</code>), hardware sensors (<code>dumpsys sensorservice</code>), and an interactive <code>dumpsys</code> service viewer.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">[3] Processes &amp; Services</div>
+            <p>Live <code>ps</code> table sortable (<kbd>s</kbd>) by CPU%, RAM, PID, or Name, plus active Android service records from <code>dumpsys activity services</code> and confirmed <code>SIGKILL</code> (<kbd>K</kbd>).</p>
+          </div>
+          <div class="card">
+            <div class="card-title">[4] Packages &amp; Apps</div>
+            <p>Filter All/User/System packages (<kbd>f</kbd>), press <kbd>Enter</kbd> to inspect SDK levels, installer, granted/denied permissions, launch (<kbd>l</kbd>), pull APK (<kbd>p</kbd>), force-stop (<kbd>x</kbd>), or clear data (<kbd>c</kbd>).</p>
+          </div>
+          <div class="card">
+            <div class="card-title">[5] Live Logcat</div>
+            <p>Streaming <code>logcat -v threadtime</code> ring buffer with instant level filters (<kbd>v</kbd>/<kbd>d</kbd>/<kbd>i</kbd>/<kbd>w</kbd>/<kbd>e</kbd>/<kbd>f</kbd>), text search (<kbd>/</kbd>), pause (<kbd>Space</kbd>), tail (<kbd>G</kbd>), clear (<kbd>C</kbd>), and export (<kbd>E</kbd>).</p>
+          </div>
+          <div class="card">
+            <div class="card-title">[6] Filesystem Explorer</div>
+            <p>Browse <code>/sdcard</code> (<kbd>d</kbd>), <code>/data/local/tmp</code> (<kbd>t</kbd>), and <code>/</code> with permissions, symlinks, 32 KiB file preview (<kbd>Enter</kbd>), pull (<kbd>p</kbd>), and confirmed push (<kbd>u</kbd>).</p>
+          </div>
+          <div class="card">
+            <div class="card-title">[7] Personal Data</div>
+            <p>Carries over Contacts, SMS (comma &amp; newline-safe parser), Call Logs, and Accounts from the original C# app, plus Android 10–15+ permission diagnostics and message detail viewer.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">[8] Shell &amp; Action Deck</div>
+            <p>Embedded interactive ADB shell with command history (<kbd>↑</kbd>/<kbd>↓</kbd>) alongside quick actions: PNG screenshot (<kbd>F2</kbd>), reboot (<kbd>F3</kbd>), SQLite snapshot (<kbd>F4</kbd>), and remote text input (<kbd>Ctrl+I</kbd>).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 STORAGE & CLI -->
+      <section id="storage-cli" class="wiki-section">
+        <div class="section-tag">06 // Persistence &amp; Automation</div>
+        <h2>SQLite Snapshots, Exports &amp; Headless CLI</h2>
+        <p>
+          Unlike the original C# app's external SQL Server LocalDB requirement, <code>adbsight</code> bundles SQLite directly (WAL mode, zero external setup).
+        </p>
+        <ul>
+          <li>Press <kbd>S</kbd> to save a labeled full device snapshot to SQLite (with deduplicated personal data tables).</li>
+          <li>Press <kbd>H</kbd> to open Snapshot History and inspect any captured device snapshot <strong>offline</strong>, even after unplugging the phone.</li>
+          <li>Press <kbd>e</kbd> to export the active tab (JSON/CSV) or a complete JSON / formatted Markdown inspection dossier to <code>./exports/</code>.</li>
+        </ul>
+
+        <div class="code-wrap">
+          <div class="code-head"><span>bash — headless CLI subcommands</span><button class="copy-btn">Copy</button></div>
+<pre># List USB, Wi-Fi, and mDNS wireless devices
+adbsight devices
+
+# Capture a full Markdown report headlessly and save to SQLite
+adbsight dump --format md --out pixel9_report.md --save-db --label "baseline"
+
+# Run headless dump against the built-in demo simulator
+adbsight --demo dump --format json --out demo_snapshot.json</pre>
+        </div>
+      </section>
+
+      <!-- 07 KEYBINDINGS -->
+      <section id="keybindings" class="wiki-section">
+        <div class="section-tag">07 // Quick Reference</div>
+        <h2>Keybindings Matrix</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Key</th><th>Scope</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><kbd>1</kbd> – <kbd>8</kbd></td><td>Global</td><td>Switch between the 8 inspector tabs</td></tr>
+              <tr><td><kbd>Tab</kbd> / <kbd>Shift+Tab</kbd></td><td>Sub-tabs</td><td>Cycle sub-tabs (System, Processes, Personal, Wireless modal)</td></tr>
+              <tr><td><kbd>w</kbd></td><td>Global</td><td>Open Wireless Debugging &amp; Device Manager (QR / mDNS / IP:Port / USB→Wi-Fi)</td></tr>
+              <tr><td><kbd>R</kbd></td><td>Global</td><td>Toggle Root Mode (<code>adb root</code> / <code>su</code>)</td></tr>
+              <tr><td><kbd>r</kbd></td><td>Global</td><td>Refresh active tab (or exit offline snapshot mode)</td></tr>
+              <tr><td><kbd>j</kbd>/<kbd>k</kbd> or <kbd>↑</kbd>/<kbd>↓</kbd></td><td>Lists/Tables</td><td>Move selection (<kbd>PgUp</kbd>/<kbd>PgDn</kbd> scroll detail panes)</td></tr>
+              <tr><td><kbd>/</kbd> and <kbd>Esc</kbd></td><td>Global</td><td>Incremental search/filter; <kbd>Esc</kbd> clears filter or closes modal</td></tr>
+              <tr><td><kbd>S</kbd> / <kbd>H</kbd></td><td>Global</td><td>Save full SQLite snapshot / Browse &amp; load snapshot history</td></tr>
+              <tr><td><kbd>e</kbd></td><td>Global</td><td>Open Export modal (JSON / CSV / Markdown)</td></tr>
+              <tr><td><kbd>F2</kbd> / <kbd>F3</kbd> / <kbd>F4</kbd></td><td>Global</td><td>Capture PNG screenshot / Reboot (confirmed) / Quick snapshot</td></tr>
+              <tr><td><kbd>?</kbd> / <kbd>q</kbd></td><td>Global</td><td>Show Help overlay / Quit ADBSight</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 08 ARCHITECTURE -->
+      <section id="architecture" class="wiki-section">
+        <div class="section-tag">08 // Codebase Design</div>
+        <h2>Architecture</h2>
+        <div class="code-wrap">
+          <div class="code-head"><span>module layout</span><button class="copy-btn">Copy</button></div>
+<pre>src/
+├── main.rs            # CLI parser, file-only tracing, panic-safe ratatui terminal lifecycle
+├── cli.rs             # clap derive flags (--serial, --connect, --demo, devices, dump)
+├── models.rs          # Shared Serialize/Deserialize domain models
+├── adb/
+│   ├── discovery.rs   # Cross-platform adb &amp; mDNS binary auto-discovery
+│   ├── wireless.rs    # WIFI:T:ADB QR payload &amp; Unicode half-block matrix renderer
+│   ├── cli_backend.rs # Non-blocking tokio::process ADB client + streaming logcat
+│   ├── demo_backend.rs# Realistic simulated Pixel 9 Pro (Android 15) backend
+│   └── parsers/       # Pure, unit-tested Android parsers (telemetry, content, ps, pm, ls, logcat)
+├── storage/
+│   ├── config.rs      # TOML config &amp; saved Wi-Fi device bookmarks
+│   ├── db.rs          # Bundled WAL-mode SQLite snapshot &amp; deduplicated personal data DB
+│   └── export.rs      # JSON, RFC-4180 CSV, and Markdown inspection dossier exporters
+├── app/               # Async state machine, background worker pool, key/mouse handlers
+└── ui/                # Ratatui 0.30 dark cyber-inspector theme, 8 tabs, and modals</pre>
+        </div>
+      </section>
+
+      <!-- 09 TROUBLESHOOTING -->
+      <section id="troubleshooting" class="wiki-section">
+        <div class="section-tag">09 // FAQ &amp; Diagnostics</div>
+        <h2>Troubleshooting</h2>
+        <div class="callout callout-warn">
+          <div class="callout-title">SMS / CALL LOGS EMPTY ON ANDROID 10–15+?</div>
+          Modern stock Android blocks the unprivileged <code>shell</code> UID from reading <code>content://sms</code> and <code>content://call_log/calls</code>. <code>adbsight</code> detects this <code>SecurityException</code> automatically and surfaces a provider notice — press <kbd>R</kbd> on a rooted device/emulator to unlock full access.
+        </div>
+        <ul>
+          <li><strong>QR pairing times out after scanning:</strong> Ensure UDP port <code>5353</code> (mDNS) is open in your host firewall and your phone &amp; workstation are on the same Wi-Fi network without client isolation.</li>
+          <li><strong><code>adb</code> not found:</strong> Install Android SDK Platform-Tools or pass <code>--adb-path /path/to/adb</code>.</li>
+          <li><strong>Need to view runtime logs?</strong> Logs never write to the terminal while the TUI is running; inspect <code>adbsight.log</code> in your OS local data directory (e.g. <code>~/.local/share/adbsight/adbsight.log</code> on Linux).</li>
+        </ul>
+      </section>
+
+      <footer class="wiki-footer">
+        <span>ADBSight v1.0.0 • MIT/Open Source Rust TUI</span>
+        <span><a href="https://adbsight.dearanayji.rocks">adbsight.dearanayji.rocks</a> • <a href="https://github.com/ADPer0705/adbsight">github.com/ADPer0705/adbsight</a></span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
